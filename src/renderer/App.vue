@@ -11,5 +11,7 @@
 </script>
 
 <style>
-  /* CSS */
+  body {
+    -webkit-app-region: drag;
+  }
 </style>
