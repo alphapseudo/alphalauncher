@@ -1,12 +1,12 @@
 <template lang="pug">
-  h2.subtitle General
+  h2.subtitle Review
 </template>
 
 <script>
   export default {
-    name: 'server-config'
+    name: 'review'
   };
 </script>
 
-<style>
+<style lang="scss">
 </style>
