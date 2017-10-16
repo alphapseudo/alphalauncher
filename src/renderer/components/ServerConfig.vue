@@ -1,15 +1,12 @@
 <template lang="pug">
-  #app
-    h2 AlphaLauncher
-    router-view
+  h1 Server Configuration
 </template>
 
 <script>
   export default {
-    name: 'AlphaLauncher',
+    name: 'server-config'
   };
 </script>
 
 <style>
-  /* CSS */
 </style>
