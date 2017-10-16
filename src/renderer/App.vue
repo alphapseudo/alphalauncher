@@ -1,8 +1,8 @@
 <template lang="pug">
   #app
-    section.section
+    section#configuration.section
       .columns
-        .column.is-one-third
+        .column.is-one-third.navigation
           h1.title AlphaLauncher
           aside.menu
             .menu-label Configuration
@@ -21,11 +21,16 @@
                   router-link(to="/scripting") Scripting
         .column
           router-view
+    section#review.section
+      review
 </template>
 
 <script>
+  import Review from '@/components/Review';
+
   export default {
-    name: 'AlphaLauncher'
+    name: 'AlphaLauncher',
+    components: { Review }
   };
 </script>
 
@@ -59,6 +64,18 @@
   }
   a {
     -webkit-app-region: no-drag;
+  }
+  .columns {
+    height: 100%;
+  }
+  .navigation {
+    border-right: 1px solid $grey;
+  }
+  #configuration {
+    height: 50vh;
+  }
+  #review {
+    border-top: 1px solid $grey;
   }
 
   @import "~bulma";
