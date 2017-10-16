@@ -9,12 +9,13 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'server-config',
-      component: ServerConfig,
+      redirect: '/general'
     },
     {
-      path: '*',
-      redirect: '/',
-    },
+      path: '/general',
+      name: 'server-config',
+      component: ServerConfig,
+    }
   ],
+  linkActiveClass: 'is-active'
 });

@@ -1,5 +1,5 @@
 <template lang="pug">
-  h1 Server Configuration
+  h2.subtitle General
 </template>
 
 <script>
