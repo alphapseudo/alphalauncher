@@ -1,9 +1,15 @@
 import Vue from 'vue';
+import Tippy from 'v-tippy';
 import axios from 'axios';
 
 import App from './App';
 import router from './router';
 import store from './store';
+
+Vue.use(Tippy, {
+  size: 'small',
+  animation: 'perspective'
+});
 
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'));
 Vue.http = Vue.prototype.$http = axios;
