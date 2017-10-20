@@ -2,6 +2,8 @@
 
 > A simple but powerful Arma III dedicated server tool.
 
+⚠️ Currently under active development
+
 #### Build Setup
 
 ``` bash
