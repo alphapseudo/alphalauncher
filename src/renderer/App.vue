@@ -19,15 +19,12 @@
               li
                 router-link(to="/scripting") Scripting
       .column.is-two-thirds.configuration
-        router-view#view
+        router-view
 </template>
 
 <script>
-  import Review from '@/components/Review';
-
   export default {
-    name: 'AlphaLauncher',
-    components: { Review }
+    name: 'AlphaLauncher'
   };
 </script>
 
@@ -124,15 +121,6 @@
       vertical-align: sub;
       margin-right: 3px;
     }
-  }
-
-  #view {
-    height: 100vh;
-  }
-
-  #review {
-    height: 50vh;
-    border-top: 1px solid $grey;
   }
 
   @import "~bulma";
