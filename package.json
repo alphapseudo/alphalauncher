@@ -60,6 +60,7 @@
     "bulma-divider": "^0.0.1",
     "bulma-switch": "^0.0.4",
     "font-awesome": "^4.7.0",
+    "lodash": "^4.17.4",
     "node-sass": "^4.5.3",
     "pug": "^2.0.0-rc.4",
     "sass-loader": "^6.0.6",
