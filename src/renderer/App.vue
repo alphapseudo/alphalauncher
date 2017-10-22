@@ -101,9 +101,11 @@
 
   .no-grow { flex-grow: 0 !important }
 
+  .switch+label { padding-top: 0 !important }
+
   #app { 
     height: 100vh;
-    input, textarea, select {
+    .input, textarea, select {
       background: $black-ter;
       border: 1px solid $black-ter;
       color: $white;
@@ -123,7 +125,15 @@
     }
   }
 
+  // Animations
+  .menu-list a { 
+    transition: all 0.2s;
+  }
+  .button {
+    transition: all 0.3s;
+  }
+
   @import "~bulma";
   @import "~bulma-switch/switch.sass";
-  @import "~bulma-divider/divider.sass";  
+  @import "~bulma-slider/slider.sass";
 </style>
