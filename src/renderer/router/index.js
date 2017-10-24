@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Router from 'vue-router';
 
 import ServerConfig from '@/components/ServerConfig';
+import Difficulty from '@/components/Difficulty';
 
 Vue.use(Router);
 
@@ -13,9 +14,15 @@ export default new Router({
     },
     {
       path: '/general',
-      name: 'server-config',
       component: ServerConfig,
+    },
+    {
+      path: '/difficulty',
+      component: Difficulty,
     }
   ],
-  linkActiveClass: 'is-active'
+  linkActiveClass: 'is-active',
+  scrollBehavior() {
+    document.getElementsByClassName('configuration')[0].scrollTop = 0;
+  }
 });

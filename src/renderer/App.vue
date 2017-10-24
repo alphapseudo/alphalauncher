@@ -19,15 +19,12 @@
               li
                 router-link(to="/scripting") Scripting
       .column.is-two-thirds.configuration
-        router-view#view
+        router-view
 </template>
 
 <script>
-  import Review from '@/components/Review';
-
   export default {
-    name: 'AlphaLauncher',
-    components: { Review }
+    name: 'AlphaLauncher'
   };
 </script>
 
@@ -104,9 +101,11 @@
 
   .no-grow { flex-grow: 0 !important }
 
+  .switch+label { padding-top: 0 !important }
+
   #app { 
     height: 100vh;
-    input, textarea, select {
+    .input, textarea, select {
       background: $black-ter;
       border: 1px solid $black-ter;
       color: $white;
@@ -126,16 +125,15 @@
     }
   }
 
-  #view {
-    height: 100vh;
+  // Animations
+  .menu-list a { 
+    transition: all 0.2s;
   }
-
-  #review {
-    height: 50vh;
-    border-top: 1px solid $grey;
+  .button {
+    transition: all 0.3s;
   }
 
   @import "~bulma";
   @import "~bulma-switch/switch.sass";
-  @import "~bulma-divider/divider.sass";  
+  @import "~bulma-slider/slider.sass";
 </style>
