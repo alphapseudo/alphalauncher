@@ -47,7 +47,7 @@
       .field-body
         .field
           .control
-            input.slider.is-fullwidth.is-info.has-output(
+            input.slider.is-fullwidth.is-warning.has-output(
               step="1"
               min="0"
               max="100"
@@ -62,7 +62,7 @@
       .field-body
         .field
           .control
-            input.slider.is-fullwidth.is-info.has-output(
+            input.slider.is-fullwidth.is-warning.has-output(
               step="1"
               min="0"
               max="100"
