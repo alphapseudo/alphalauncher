@@ -50,6 +50,9 @@
   $menu-item-active-color: $black;
   $menu-item-active-background-color: $white-bis;
 
+  $table-color: $white;
+  $table-background-color: $black-ter;
+
   $label-color: $white-ter;
 
   html, body {
@@ -71,10 +74,10 @@
   }
 
   ::-webkit-scrollbar-thumb:vertical {
-    background: rgba(0,0,0,0.5);
+    background: rgba(180,180,180,0.5);
     -webkit-border-radius: 100px;
     &:active {
-      background: rgba(0,0,0,0.61);
+      background: rgba(180,180,180,0.61);
     -webkit-border-radius: 100px;
     }
   }
@@ -102,6 +105,8 @@
   .no-grow { flex-grow: 0 !important }
 
   .switch+label { padding-top: 0 !important }
+
+  .no-margin-bottom { margin-bottom: 0 !important }
 
   #app { 
     height: 100vh;
@@ -136,4 +141,5 @@
   @import "~bulma";
   @import "~bulma-switch/switch.sass";
   @import "~bulma-slider/slider.sass";
+  @import "~bulma-checkradio/checkradio.sass";
 </style>

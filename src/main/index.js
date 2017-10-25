@@ -22,7 +22,7 @@ function createWindow() {
     useContentSize: true,
     titleBarStyle: 'hidden',
     frame: false,
-    width: 845
+    width: 905
   });
 
   mainWindow.loadURL(winURL);

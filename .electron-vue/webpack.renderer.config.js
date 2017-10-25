@@ -110,7 +110,8 @@ let rendererConfig = {
   },
   plugins: [
     new webpack.ProvidePlugin({
-      _: 'lodash'
+      _: 'lodash',
+      $: 'jquery'
     }),
     new ExtractTextPlugin('styles.css'),
     new HtmlWebpackPlugin({

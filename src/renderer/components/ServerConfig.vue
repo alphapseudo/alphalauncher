@@ -7,7 +7,8 @@
       i.fa.fa-info-circle
 
   #general
-    h5.title.is-5 General
+    p.title.is-5 General
+    p.subtitle.is-6 Configure general server settings
     .field.is-horizontal
       .field-body
         .field.is-expanded
