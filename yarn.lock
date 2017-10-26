@@ -1486,6 +1486,10 @@ builtin-status-codes@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/builtin-status-codes/-/builtin-status-codes-3.0.0.tgz#85982878e21b98e1c66425e03d0174788f569ee8"
 
+bulma-checkradio@^0.0.9:
+  version "0.0.9"
+  resolved "https://registry.yarnpkg.com/bulma-checkradio/-/bulma-checkradio-0.0.9.tgz#8e1443b90b1ded910d021a0ea377f9c266a61bf4"
+
 bulma-slider@^0.0.2:
   version "0.0.2"
   resolved "https://registry.yarnpkg.com/bulma-slider/-/bulma-slider-0.0.2.tgz#589f03b654c434a2b39c9acaff3781b85e92e3e7"
@@ -4416,6 +4420,10 @@ istanbul@^0.4.0:
     which "^1.1.1"
     wordwrap "^1.0.0"
 
+jquery@^3.2.1:
+  version "3.2.1"
+  resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.2.1.tgz#5c4d9de652af6cd0a770154a631bba12b015c787"
+
 js-base64@^2.1.8, js-base64@^2.1.9:
   version "2.3.2"
   resolved "https://registry.yarnpkg.com/js-base64/-/js-base64-2.3.2.tgz#a79a923666372b580f8e27f51845c6f7e8fbfbaf"
@@ -7028,6 +7036,10 @@ sort-keys@^1.0.0:
   dependencies:
     is-plain-obj "^1.0.0"
 
+sortablejs@^1.6.0:
+  version "1.6.1"
+  resolved "https://registry.yarnpkg.com/sortablejs/-/sortablejs-1.6.1.tgz#d120d103fbb9f60c7db27814a1384072e6c6e083"
+
 source-list-map@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/source-list-map/-/source-list-map-2.0.0.tgz#aaa47403f7b245a92fbc97ea08f250d6087ed085"
@@ -7815,6 +7827,12 @@ vue-template-es2015-compiler@^1.6.0:
 vue@^2.3.3:
   version "2.5.2"
   resolved "https://registry.yarnpkg.com/vue/-/vue-2.5.2.tgz#fd367a87bae7535e47f9dc5c9ec3b496e5feb5a4"
+
+vuedraggable@^2.14.1:
+  version "2.14.1"
+  resolved "https://registry.yarnpkg.com/vuedraggable/-/vuedraggable-2.14.1.tgz#034e1e052e25b9388429ae96db9eb6f2c3b10d87"
+  dependencies:
+    sortablejs "^1.6.0"
 
 vuex@^2.3.1:
   version "2.5.0"

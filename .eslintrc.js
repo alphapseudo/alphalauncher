@@ -11,7 +11,8 @@ module.exports = {
   extends: 'airbnb-base',
   globals: {
     __static: true,
-    _: true
+    _: true,
+    $: true
   },
   plugins: [
     'html'
