@@ -52,8 +52,11 @@
 
   $table-color: $white;
   $table-background-color: $black-ter;
+  $table-striped-row-even-background-color: $grey-dark;
 
   $label-color: $white-ter;
+
+  $check-green: #2fff78;
 
   html, body {
     height: 100%;
@@ -108,6 +111,8 @@
 
   .no-margin-bottom { margin-bottom: 0 !important }
 
+  .isHidden { display: none }
+
   #app { 
     height: 100vh;
     .input, textarea, select {
@@ -136,6 +141,53 @@
   }
   .button {
     transition: all 0.3s;
+  }
+
+  // Table
+  table.table { 
+    margin-bottom: 1em;
+    table-layout: fixed;
+    font-size: 0.75rem;
+    thead, tbody { display: block; }
+    tbody {
+      height: 45vh;
+      width: 100%;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+    thead th {
+    padding: 0.5em 0.35em;
+    }
+    tbody td {
+      word-wrap: break-word;
+      max-width: 150px;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      padding: 0 0.35em;
+      border-bottom: 0;
+      vertical-align: middle;
+    }
+  }
+  .table-list {
+    font-size: 0.75rem;
+    .is-checkbox[type="checkbox"].is-small + label { padding: 0 0 0 1.5rem }
+    .drag-handle {
+      margin: 0 0.4rem;
+      cursor: move;
+      font-size: 1rem;
+    }
+  }
+
+  .hint {
+    font-size: 0.8rem;
+    margin-top: 0.2rem;
+    .fa { margin: 0 0.3rem }
+    .fa-check { color: $check-green }
+  }
+  .ghost {
+    background-color: $grey;
+    opacity: 0.5;
   }
 
   @import "~bulma";

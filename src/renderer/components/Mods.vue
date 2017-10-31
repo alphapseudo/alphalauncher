@@ -2,10 +2,10 @@
   #missions
     .columns
       .column
-        p.title.is-5 Missions
-        p.subtitle.is-6 Create server mission rotation
+        p.title.is-5 Mods
+        p.subtitle.is-6 Manage server modifications
       .column.is-narrow
-        p.is-size-7 Selected #[b {{ selectedCount }}] of #[b {{ missionCount }}] missions
+        p.is-size-7 Selected #[b {{ selectedCount }}] of #[b {{ modCount }}] mods
     .columns.no-margin-bottom
       .column
         .field.has-addons
@@ -34,14 +34,13 @@
       thead
         tr
           th
-          th Mission
-          th Map
-          th Difficulty
-      draggable.table-list(v-model="missions" :options="options" element="tbody")
+          th Mod
+          th Steam
+      draggable.table-list(v-model="mods" :options="options" element="tbody")
         tr(
-          v-for="(mission, index) in missions"
-          :key="mission.name"
-          :class="{isHidden: missesSearch(mission.name)}"
+          v-for="(mod, index) in mods"
+          :key="mod.name"
+          :class="{isHidden: missesSearch(mod.name)}"
         )
           td
             span.drag-handle
@@ -49,40 +48,19 @@
           td
             input.is-checkbox.is-white.is-small(
               type="checkbox"
-              :checked="mission.enabled"
+              :checked="mod.enabled"
             )
-            label(@click="toggleMission(index)")
-              | {{ mission.name | decode }}
-          td {{ mission.level }}
+            label(@click="toggleMod(index)")
+              | {{ mod.name | decode }}
           td
-            .select.is-small
-              select(:value="mission.difficulty" @change="changeDifficulty(index, $event)")
-                option(value="recruit") Recruit
-                option(value="regular") Regular
-                option(value="veteran") Veteran
-                option(value="custom") Custom
+            i.fa.fa-steam(v-if="mod.isSteam")
     .columns
       .column
         p.hint
-          | Use #[i.fa.fa-bars] to change the order of the list.
+          | Use #[i.fa.fa-bars] to change the load order of the mods.
           br
-          | Click on a mission #[i.fa.fa-check] to include it in the rotation.
-      .column.is-narrow
-          p.difficulty.is-size-7 Set Global Difficulty
-          .field.has-addons
-            p.control
-              a.button.is-small.is-warning.is-outlined(@click="globalDifficulty('recruit')")
-                | Recruit
-            p.control
-              a.button.is-small.is-warning.is-outlined(@click="globalDifficulty('regular')")
-                | Regular
-            p.control
-              a.button.is-small.is-warning.is-outlined(@click="globalDifficulty('veteran')")
-                | Veteran
-            p.control
-              a.button.is-small.is-warning.is-outlined(@click="globalDifficulty('custom')")
-                | Custom
-  </template>
+          | Click on a mod #[i.fa.fa-check] to enable / disable.
+</template>
 
 <script>
   import Draggable from 'vuedraggable';
@@ -112,42 +90,36 @@
       };
     },
     computed: {
-      missions: {
+      mods: {
         get() {
-          return this.$store.state.missions.available;
+          return this.$store.state.mods.available;
         },
-        set(missions) {
-          this.$store.commit('UPDATE_MISSIONS', missions);
+        set(mods) {
+          this.$store.commit('UPDATE_MODS', mods);
         }
       },
-      missionCount() {
-        return this.missions.length;
+      modCount() {
+        return this.mods.length;
       },
       selectedCount() {
-        return this.missions.reduce((count, mission) => {
-          if (mission.enabled) count += 1;
+        return this.mods.reduce((count, mod) => {
+          if (mod.enabled) count += 1;
           return count;
         }, 0);
       }
     },
     methods: {
-      toggleMission(i) {
-        this.$store.commit('TOGGLE_MISSION', i);
+      toggleMod(i) {
+        this.$store.commit('TOGGLE_MOD', i);
       },
       selectAll() {
-        this.$store.commit('TOGGLE_ALL_MISSIONS', true);
+        this.$store.commit('TOGGLE_ALL_MODS', true);
       },
       deselectAll() {
-        this.$store.commit('TOGGLE_ALL_MISSIONS', false);
+        this.$store.commit('TOGGLE_ALL_MODS', false);
       },
       invert() {
-        this.$store.commit('INVERT_MISSIONS');
-      },
-      changeDifficulty(index, e) {
-        this.$store.commit('CHANGE_DIFFICULTY', { index, value: e.target.value });
-      },
-      globalDifficulty(value) {
-        this.$store.commit('CHANGE_ALL_DIFFICULTY', value);
+        this.$store.commit('INVERT_MODS');
       },
       missesSearch(name) {
         if (this.search === '') return false;
@@ -169,20 +141,12 @@
   
   $check-green: #2fff78;
 
-  #missions {
-    select { 
-      background: rgba(240, 248, 255, 0);
-      border: 0;
-    }
-  }
   td:nth-child(1) { width: 5% }
   td:nth-child(2) { width: 85% }
-  td:nth-child(3) { width: 5% }
-  td:nth-child(4) { width: 5% }
+  td:nth-child(3) { width: 10% }
   .is-checkbox[type="checkbox"].is-white:checked + label::after {
     border-color: $check-green !important;
   }
   .button .text { margin-bottom: 1px }
-  .difficulty { margin-bottom: 0.2rem }
 </style>
 
