@@ -31,7 +31,7 @@ const state = defaults;
 const mutations = {
   UPDATE_DIFFICULTY(state, [path, value]) {
     const previous = _.get(state, path);
-    if (!isNaN(previous) && value === '') {
+    if ($.isNumeric(previous) && value === '') {
       value = 0;
     }
     state = _.set(state, path, value);

@@ -8,7 +8,7 @@ const state = {
 const mutations = {
   UPDATE_PARAMS(state, [path, value]) {
     const previous = _.get(state, path);
-    if (!isNaN(previous) && value === '') {
+    if ($.isNumeric(previous) && value === '') {
       value = 0;
     }
     state = _.set(state, path, value);
