@@ -186,7 +186,8 @@
     .fa-check { color: $check-green }
   }
   .ghost {
-    background-color: $grey;
+    background-color: $white-ter !important;
+    color: $grey-darker !important;
     opacity: 0.5;
   }
 

@@ -1,5 +1,8 @@
 const state = {
-  port: 2302
+  port: 2302,
+  ranking: null,
+  pid: null,
+  netlog: false
 };
 
 const mutations = {

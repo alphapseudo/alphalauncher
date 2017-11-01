@@ -60,6 +60,8 @@
           | Use #[i.fa.fa-bars] to change the load order of the mods.
           br
           | Click on a mod #[i.fa.fa-check] to enable / disable.
+          br
+          | #[i.fa.fa-steam] denotes a Steam Workshop modification.
 </template>
 
 <script>
