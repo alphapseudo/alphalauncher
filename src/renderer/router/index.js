@@ -6,6 +6,7 @@ import Difficulty from '@/components/Difficulty';
 import Missions from '@/components/Missions';
 import Mods from '@/components/Mods';
 import Logging from '@/components/Logging';
+import Scripting from '@/components/Scripting';
 
 Vue.use(Router);
 
@@ -34,6 +35,10 @@ export default new Router({
     {
       path: '/logging',
       component: Logging
+    },
+    {
+      path: '/scripting',
+      component: Scripting
     }
   ],
   linkActiveClass: 'is-active',

@@ -5,6 +5,7 @@ const defaults = {
   loopback: false,
   password: '',
   passwordAdmin: '',
+  serverCommandPassword: '',
   motd: [],
   motdInterval: 5,
   BattlEye: true,
@@ -28,7 +29,14 @@ const defaults = {
   localClient: [],
   admins: [],
   logfile: null,
-  timestamp: 'none'
+  timestamp: 'none',
+  doubleIdDetected: '',
+  onUserConnected: '',
+  onUserDisconnected: '',
+  onHackedData: '',
+  onDifferentData: '',
+  onUnsignedData: '',
+  regularCheck: ''
 };
 
 const state = Object.assign(defaults, {});
@@ -36,7 +44,7 @@ const state = Object.assign(defaults, {});
 const mutations = {
   UPDATE_CONFIG(state, [path, value]) {
     const previous = _.get(state, path);
-    if (!isNaN(previous) && value === '') {
+    if ($.isNumeric(previous) && value === '') {
       value = 0;
     }
     state = _.set(state, path, value);
