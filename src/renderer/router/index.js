@@ -5,6 +5,7 @@ import ServerConfig from '@/components/ServerConfig';
 import Difficulty from '@/components/Difficulty';
 import Missions from '@/components/Missions';
 import Mods from '@/components/Mods';
+import Logging from '@/components/Logging';
 
 Vue.use(Router);
 
@@ -29,6 +30,10 @@ export default new Router({
     {
       path: '/mods',
       component: Mods
+    },
+    {
+      path: '/logging',
+      component: Logging
     }
   ],
   linkActiveClass: 'is-active',

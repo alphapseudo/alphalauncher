@@ -26,7 +26,9 @@ const defaults = {
   maxPacketLoss: { enabled: false, value: 50 },
   headlessClients: [],
   localClient: [],
-  admins: []
+  admins: [],
+  logfile: null,
+  timestamp: 'none'
 };
 
 const state = Object.assign(defaults, {});
