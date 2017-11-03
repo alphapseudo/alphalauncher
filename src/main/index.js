@@ -22,7 +22,8 @@ function createWindow() {
     useContentSize: true,
     titleBarStyle: 'hidden',
     frame: false,
-    width: 905
+    width: 905,
+    backgroundColor: '#363636'
   });
 
   mainWindow.loadURL(winURL);

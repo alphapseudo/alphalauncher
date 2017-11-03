@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 
-import ServerConfig from '@/components/ServerConfig';
+import General from '@/components/General';
 import Difficulty from '@/components/Difficulty';
 import Missions from '@/components/Missions';
 import Mods from '@/components/Mods';
@@ -18,7 +18,7 @@ export default new Router({
     },
     {
       path: '/general',
-      component: ServerConfig,
+      component: General,
     },
     {
       path: '/difficulty',

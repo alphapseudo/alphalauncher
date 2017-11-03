@@ -1,30 +1,59 @@
 <template lang="pug">
   section.section#app
-    .columns.is-mobile
-      .column.is-one-third.navigation
-        h3.title.is-3 AlphaLauncher
-        aside.menu
-          .menu-label Configuration
-            ul.menu-list
-              li
-                router-link(to="/general") General
-              li
-                router-link(to="/difficulty") Difficulty
-              li
-                router-link(to="/missions") Missions
-              li
-                router-link(to="/mods") Mods
-              li
-                router-link(to="/logging") Logging
-              li
-                router-link(to="/scripting") Scripting
-      .column.is-two-thirds.configuration
-        router-view
+    transition(name="fade" mode="out-in" appear)
+      template(v-if="!isLoading")
+        .columns.is-mobile
+            .column.is-one-third.navigation
+              h3.title.is-3 AlphaLauncher
+              aside.menu
+                .menu-label Configuration
+                  ul.menu-list
+                    li
+                      router-link(to="/general") General
+                    li
+                      router-link(to="/difficulty") Difficulty
+                    li
+                      router-link(to="/missions") Missions
+                    li
+                      router-link(to="/mods") Mods
+                    li
+                      router-link(to="/logging") Logging
+                    li
+                      router-link(to="/scripting") Scripting
+              a.button.is-success
+                i.fa.fa-wrench
+            .column.is-two-thirds.configuration
+              router-view
+      spinner.spinner(
+        size="large"
+        line-bg-color="#363636"
+        line-fg-color="#ffdd57"
+        text-fg-color="#fff"
+        message="Loading..."
+        v-else
+      )
 </template>
 
 <script>
+  import Spinner from 'vue-simple-spinner';
+  import System from './lib/system';
+
   export default {
-    name: 'AlphaLauncher'
+    name: 'AlphaLauncher',
+    data() {
+      return {
+        isLoading: true
+      };
+    },
+    mounted() {
+      System.getAppPath().then((path) => {
+        console.log(path);
+        setTimeout(() => {
+          this.isLoading = false;
+        }, 150);
+      });
+    },
+    components: { spinner: Spinner }
   };
 </script>
 
@@ -67,6 +96,14 @@
     -webkit-app-region: drag;
     -webkit-user-select: none;
     a, .configuration { -webkit-app-region: no-drag }
+  }
+
+  .spinner {
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
   }
 
   ::-webkit-scrollbar {
@@ -141,6 +178,12 @@
   }
   .button {
     transition: all 0.3s;
+  }
+  .fade-enter-active, .fade-leave-active {
+    transition: opacity .5s
+  }
+  .fade-enter, .fade-leave-to {
+    opacity: 0
   }
 
   // Table
