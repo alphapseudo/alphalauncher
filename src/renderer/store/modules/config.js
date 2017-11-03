@@ -8,7 +8,7 @@ const defaults = {
   serverCommandPassword: '',
   motd: [],
   motdInterval: 5,
-  BattlEye: true,
+  battlEye: true,
   persistent: false,
   drawingInMap: true,
   forceRotorLibSimulation: 0,

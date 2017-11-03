@@ -209,6 +209,8 @@
     select { 
       background: rgba(240, 248, 255, 0);
       border: 0;
+      option { background: $black-ter }
+      &:focus { box-shadow: none }
     }
   }
   td:nth-child(1) { width: 5% }
