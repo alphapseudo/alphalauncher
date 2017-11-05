@@ -73,6 +73,7 @@
     "vue-electron": "^1.0.6",
     "vue-router": "^2.5.3",
     "vue-simple-spinner": "^1.2.8",
+    "vue-toasted": "^1.1.22",
     "vuedraggable": "^2.14.1",
     "vuex": "^2.3.1",
     "winreg": "^1.2.4"

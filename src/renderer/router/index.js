@@ -7,6 +7,7 @@ import Missions from '@/components/Missions';
 import Mods from '@/components/Mods';
 import Logging from '@/components/Logging';
 import Scripting from '@/components/Scripting';
+import Settings from '@/components/Settings';
 
 Vue.use(Router);
 
@@ -39,10 +40,17 @@ export default new Router({
     {
       path: '/scripting',
       component: Scripting
+    },
+    {
+      path: '/settings',
+      component: Settings
     }
   ],
   linkActiveClass: 'is-active',
   scrollBehavior() {
-    document.getElementsByClassName('configuration')[0].scrollTop = 0;
+    const configuration = document.getElementsByClassName('configuration')[0];
+    if (configuration) {
+      configuration.scrollTop = 0;
+    }
   }
 });

@@ -15,8 +15,8 @@ const {
 } = constants;
 
 /**
- * Collection of system helpers for identifying common paths
- * automatically through discovery
+ * Collection of helpers for manipulating and discovering
+ * file system paths.
  */
 class System {
   constructor() {
@@ -26,7 +26,7 @@ class System {
   }
 
   /**
-   * Obtain a new HKEY_CURRENT_USER registry object (Windows)
+   * Obtain a new HKEY_CURRENT_USER registry object (Windows).
    * @param {String} path Key path
    */
   static getRegistry(path) {
@@ -35,7 +35,7 @@ class System {
 
   /**
    * Determine if a Steam path can be determined automatically
-   * and return
+   * and return.
    * @throws Error when Steam path cannot be resolved
    * @returns {String} Steam path
    */
@@ -50,14 +50,13 @@ class System {
   }
 
   /**
-   * Check if application is installed on Steam and return location.
+   * Get application path or attempt to retrieve it from the registry.
    * @throws Error when application is not installed
    * @returns {String} Application base path
    */
   async getAppPath() {
-    const steamPath = await this.getSteamPath();
-
     if (!this.appPath) {
+      const steamPath = await this.getSteamPath();
       const reg = System.getRegistry(`${STEAM_BASE}\\Apps\\${APP_ID}`);
       const isInstalled = await reg.getAsync('Installed')
         .then(item => parseInt(item.value, 16));
@@ -66,6 +65,37 @@ class System {
     }
 
     return Path.normalize(this.appPath);
+  }
+
+  /**
+   * Validate application path and set it on success.
+   */
+  async setAppPath(path) {
+    const validPath = await System.validatePath(path);
+
+    if (validPath) {
+      this.appPath = path;
+    } else {
+      throw new Error('Server executable not found, please check permissions and path');
+    }
+
+    return this.appPath;
+  }
+
+  /**
+   * Validate path to directory contains server executable.
+   * @param {String} path Absolute application path
+   * @returns {Boolean} Path is valid or not 
+   */
+  static async validatePath(path) {
+    const executable = Path.normalize(`${path}/${EXEC_NAME}`);
+
+    try {
+      await checkFile(executable, permissions.F_OK);
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 
   /**

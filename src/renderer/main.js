@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import Tippy from 'v-tippy';
+import Toasted from 'vue-toasted';
 import axios from 'axios';
 
 import App from './App';
@@ -9,6 +10,11 @@ import store from './store';
 Vue.use(Tippy, {
   size: 'small',
   animation: 'perspective'
+});
+
+Vue.use(Toasted, {
+  position: 'bottom-right',
+  duration: 4000
 });
 
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'));

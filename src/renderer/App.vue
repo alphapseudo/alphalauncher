@@ -7,21 +7,22 @@
               h3.title.is-3 AlphaLauncher
               aside.menu
                 .menu-label Configuration
-                  ul.menu-list
-                    li
-                      router-link(to="/general") General
-                    li
-                      router-link(to="/difficulty") Difficulty
-                    li
-                      router-link(to="/missions") Missions
-                    li
-                      router-link(to="/mods") Mods
-                    li
-                      router-link(to="/logging") Logging
-                    li
-                      router-link(to="/scripting") Scripting
-              a.button.is-success
-                i.fa.fa-wrench
+                ul.menu-list(:class="{'is-disabled': !appPath}")
+                  li
+                    router-link(to="/general") General
+                  li
+                    router-link(to="/difficulty") Difficulty
+                  li
+                    router-link(to="/missions") Missions
+                  li
+                    router-link(to="/mods") Mods
+                  li
+                    router-link(to="/logging") Logging
+                  li
+                    router-link(to="/scripting") Scripting
+              .controls
+                router-link(to="/settings").button.is-success
+                  i.fa.fa-wrench
             .column.is-two-thirds.configuration
               router-view
       spinner.spinner(
@@ -36,7 +37,6 @@
 
 <script>
   import Spinner from 'vue-simple-spinner';
-  import System from './lib/system';
 
   export default {
     name: 'AlphaLauncher',
@@ -45,13 +45,21 @@
         isLoading: true
       };
     },
+    computed: {
+      appPath() { return this.$store.state.app.appLocation; }
+    },
     mounted() {
-      System.getAppPath().then((path) => {
-        console.log(path);
-        setTimeout(() => {
-          this.isLoading = false;
-        }, 150);
+      this.$store.dispatch('INITIALIZE_LAUNCHER').then(() => {
+        if (!this.appPath) {
+          this.$router.push('settings');
+        }
+        this.removeLoading();
       });
+    },
+    methods: {
+      removeLoading() {
+        this.isLoading = false;
+      }
     },
     components: { spinner: Spinner }
   };
@@ -136,11 +144,24 @@
 
   #app > .columns { height: 100% }
 
-  .navigation { border-right: 1px solid $grey }
+  .column.is-one-third.navigation {
+    border-right: 1px solid $grey;
+    display: flex;
+    flex-direction: column;
+    aside.menu { flex: 1 }
+  }
+
+  .menu-list.is-disabled {
+    cursor: not-allowed;
+    li {
+      pointer-events: none;
+      opacity: .65; 
+    }
+  }
 
   .input[type="number"] { width: 6em }
   
-  .configuration { overflow: auto}
+  .configuration { overflow: auto }
 
   .no-grow { flex-grow: 0 !important }
 
@@ -154,10 +175,12 @@
     height: 100vh;
     .input, textarea, select {
       background: $black-ter;
-      border: 1px solid $black-ter;
       color: $white;
-      &:active, &:focus {
+      &:not(.is-danger):not(.is-success) { 
+        border: 1px solid $black-ter;
+        &:active, &:focus {
         border: 1px solid $blue;
+        }
       }
       &[disabled] {
         background-color: #7a7a7a;

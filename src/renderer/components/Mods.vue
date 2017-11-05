@@ -30,7 +30,7 @@
             input.input.is-small(type="text" placeholder="Search..." v-model.trim="search")
             span.icon.is-small.is-left
               i.fa.fa-search
-    table.table.is-fullwidth.is-striped
+    table.table.is-fullwidth
       thead
         tr
           th

@@ -10,3 +10,5 @@ npm-debug.log.*
 thumbs.db
 !.gitkeep
 .vscode
+*.cfg
+*.Arma3Profile
