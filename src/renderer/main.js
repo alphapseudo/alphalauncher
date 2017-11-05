@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import Tippy from 'v-tippy';
+import Toasted from 'vue-toasted';
 import axios from 'axios';
 
 import App from './App';
@@ -11,11 +12,15 @@ Vue.use(Tippy, {
   animation: 'perspective'
 });
 
+Vue.use(Toasted, {
+  position: 'bottom-right',
+  duration: 4000
+});
+
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'));
 Vue.http = Vue.prototype.$http = axios;
 Vue.config.productionTip = false;
 
-/* eslint-disable no-new */
 new Vue({
   components: { App },
   router,

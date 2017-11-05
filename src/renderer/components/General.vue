@@ -191,7 +191,7 @@
 
 <script>
   export default {
-    name: 'server-config',
+    name: 'general',
     computed: {
       hostname: {
         get() { return this.$store.state.config.hostname; },

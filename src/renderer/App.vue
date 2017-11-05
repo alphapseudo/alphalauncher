@@ -1,30 +1,67 @@
 <template lang="pug">
   section.section#app
-    .columns.is-mobile
-      .column.is-one-third.navigation
-        h3.title.is-3 AlphaLauncher
-        aside.menu
-          .menu-label Configuration
-            ul.menu-list
-              li
-                router-link(to="/general") General
-              li
-                router-link(to="/difficulty") Difficulty
-              li
-                router-link(to="/missions") Missions
-              li
-                router-link(to="/mods") Mods
-              li
-                router-link(to="/logging") Logging
-              li
-                router-link(to="/scripting") Scripting
-      .column.is-two-thirds.configuration
-        router-view
+    transition(name="fade" mode="out-in" appear)
+      template(v-if="!isLoading")
+        .columns.is-mobile
+            .column.is-one-third.navigation
+              h3.title.is-3 AlphaLauncher
+              aside.menu
+                .menu-label Configuration
+                ul.menu-list(:class="{'is-disabled': !appPath}")
+                  li
+                    router-link(to="/general") General
+                  li
+                    router-link(to="/difficulty") Difficulty
+                  li
+                    router-link(to="/missions") Missions
+                  li
+                    router-link(to="/mods") Mods
+                  li
+                    router-link(to="/logging") Logging
+                  li
+                    router-link(to="/scripting") Scripting
+              .controls
+                router-link(to="/settings").button.is-success
+                  i.fa.fa-wrench
+            .column.is-two-thirds.configuration
+              router-view
+      spinner.spinner(
+        size="large"
+        line-bg-color="#363636"
+        line-fg-color="#ffdd57"
+        text-fg-color="#fff"
+        message="Loading..."
+        v-else
+      )
 </template>
 
 <script>
+  import Spinner from 'vue-simple-spinner';
+
   export default {
-    name: 'AlphaLauncher'
+    name: 'AlphaLauncher',
+    data() {
+      return {
+        isLoading: true
+      };
+    },
+    computed: {
+      appPath() { return this.$store.state.app.appLocation; }
+    },
+    mounted() {
+      this.$store.dispatch('INITIALIZE_LAUNCHER').then(() => {
+        if (!this.appPath) {
+          this.$router.push('settings');
+        }
+        this.removeLoading();
+      });
+    },
+    methods: {
+      removeLoading() {
+        this.isLoading = false;
+      }
+    },
+    components: { spinner: Spinner }
   };
 </script>
 
@@ -69,6 +106,14 @@
     a, .configuration { -webkit-app-region: no-drag }
   }
 
+  .spinner {
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
   ::-webkit-scrollbar {
     width: 8px;
     background-color: rgba(0,0,0,0);
@@ -99,11 +144,24 @@
 
   #app > .columns { height: 100% }
 
-  .navigation { border-right: 1px solid $grey }
+  .column.is-one-third.navigation {
+    border-right: 1px solid $grey;
+    display: flex;
+    flex-direction: column;
+    aside.menu { flex: 1 }
+  }
+
+  .menu-list.is-disabled {
+    cursor: not-allowed;
+    li {
+      pointer-events: none;
+      opacity: .65; 
+    }
+  }
 
   .input[type="number"] { width: 6em }
   
-  .configuration { overflow: auto}
+  .configuration { overflow: auto }
 
   .no-grow { flex-grow: 0 !important }
 
@@ -117,10 +175,12 @@
     height: 100vh;
     .input, textarea, select {
       background: $black-ter;
-      border: 1px solid $black-ter;
       color: $white;
-      &:active, &:focus {
+      &:not(.is-danger):not(.is-success) { 
+        border: 1px solid $black-ter;
+        &:active, &:focus {
         border: 1px solid $blue;
+        }
       }
       &[disabled] {
         background-color: #7a7a7a;
@@ -141,6 +201,12 @@
   }
   .button {
     transition: all 0.3s;
+  }
+  .fade-enter-active, .fade-leave-active {
+    transition: opacity .5s
+  }
+  .fade-enter, .fade-leave-to {
+    opacity: 0
   }
 
   // Table
