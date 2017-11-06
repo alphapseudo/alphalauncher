@@ -52,7 +52,7 @@
         }, ([path = null]) => {
           this.$store.dispatch('UPDATE_APP_DIRECTORY', path)
             .then(() => {
-              this.$toasted.success('Application path validated');
+              this.$toasted.success('Application Path Valid');
             })
             .catch((e) => {
               this.$toasted.error(e.message);

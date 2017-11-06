@@ -1,56 +1,17 @@
-const mockMods = [
-  {
-    name: '@CBA',
-    path: 'C:/steam/common/ArmaIII/',
-    isSteam: false,
-    enabled: false
-  },
-  {
-    name: '@ACE3',
-    path: 'C:/steam/common/ArmaIII/!Workshop/',
-    isSteam: true,
-    enabled: false
-  },
-  {
-    name: '@Dynasound2',
-    path: 'C:/steam/common/ArmaIII/!Workshop/',
-    isSteam: true,
-    enabled: false
-  },
-  {
-    name: '@ASRAI3',
-    path: 'C:/steam/common/ArmaIII/!Workshop/',
-    isSteam: true,
-    enabled: false
-  },
-  {
-    name: '@Blastcore',
-    path: 'C:/steam/common/ArmaIII/!Workshop/',
-    isSteam: true,
-    enabled: false
-  },
-  {
-    name: '@MCC',
-    path: 'C:/steam/common/ArmaIII/!Workshop/',
-    isSteam: true,
-    enabled: false
-  },
-  {
-    name: '@PlayerUnknownsBattleRoyale',
-    path: 'C:/steam/common/ArmaIII/!Workshop/',
-    isSteam: false,
-    enabled: false
-  }
-];
+import Application from '../../lib/application';
 
-const defaults = {
-  available: mockMods
+const state = {
+  available: []
 };
-
-const state = defaults;
 
 const mutations = {
   UPDATE_MODS(state, mods) {
+    const comparitor = (a, b) => `${a.path}:${a.name}` === `${b.path}:${b.name}`;
+    const intersect = _.intersectionWith(state.available, mods, comparitor);
+    const difference = _.differenceWith(mods, intersect, comparitor);
+    state.available = _.concat(intersect, difference);
+  },
+  REORDER_MODS(state, mods) {
     state.available = mods;
   },
   TOGGLE_MOD(state, index) {
@@ -64,7 +25,15 @@ const mutations = {
   }
 };
 
+const actions = {
+  async REFRESH_MODS(context) {
+    const mods = await Application.getMods();
+    context.commit('UPDATE_MODS', mods);
+  }
+};
+
 export default {
   state,
-  mutations
+  mutations,
+  actions
 };
