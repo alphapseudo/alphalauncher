@@ -9,17 +9,29 @@
                 .menu-label Configuration
                 ul.menu-list(:class="{'is-disabled': !appPath}")
                   li
-                    router-link(to="/general") General
+                    router-link(to="/general")
+                      span #[i.fa.fa-fw.fa-desktop]
+                      | General
                   li
-                    router-link(to="/difficulty") Difficulty
+                    router-link(to="/difficulty")
+                      span #[i.fa.fa-fw.fa-sliders]
+                      | Difficulty
                   li
-                    router-link(to="/missions") Missions
+                    router-link(to="/missions")
+                      span #[i.fa.fa-fw.fa-map-marker]
+                      | Missions
                   li
-                    router-link(to="/mods") Mods
+                    router-link(to="/mods")
+                      span #[i.fa.fa-fw.fa-cubes]
+                      | Mods
                   li
-                    router-link(to="/logging") Logging
+                    router-link(to="/logging")
+                      span #[i.fa.fa-fw.fa-history]
+                      | Logging
                   li
-                    router-link(to="/scripting") Scripting
+                    router-link(to="/scripting")
+                      span #[i.fa.fa-fw.fa-terminal]
+                      | Scripting
               .controls
                 router-link(to="/settings").button.is-success
                   i.fa.fa-wrench
@@ -149,7 +161,10 @@
     border-right: 1px solid $grey;
     display: flex;
     flex-direction: column;
-    aside.menu { flex: 1 }
+    aside.menu {
+      flex: 1;
+      span { margin-right: 0.5rem }
+    }
   }
 
   .menu-list.is-disabled {
