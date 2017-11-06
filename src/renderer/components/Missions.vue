@@ -10,27 +10,31 @@
       .column
         .field.has-addons
           p.control
-            a.button.is-small.is-info(@click="selectAll")
+            a.button.is-small.is-info(@click="selectAll" :disabled="!hasMissions")
               span.icon
                 i.fa.fa-check-square-o
-              span.text Select All
+              span.text Select
           p.control
-            a.button.is-small.is-info(@click="deselectAll")
+            a.button.is-small.is-info(@click="deselectAll" :disabled="!hasMissions")
               span.icon
                 i.fa.fa-square-o
-              span.text Deselect All
+              span.text Deselect
           p.control
-            a.button.is-small.is-info(@click="invert")
+            a.button.is-small.is-info(@click="invert" :disabled="!hasMissions")
               span.icon
                 i.fa.fa-adjust
               span.text Invert
+          p.control
+            a.button.is-small.is-success(@click="refresh")
+              span.icon(v-tippy="{delay: 500}" title="Refresh mission list")
+                i.fa.fa-refresh(:class="{'fa-spin': isRefreshing}")
       .column.is-narrow
         .field
           p.control.has-icons-left
-            input.input.is-small(type="text" placeholder="Search..." v-model.trim="search")
+            input.input.is-small(type="text" placeholder="Search..." v-model.trim="search" :disabled="!hasMissions")
             span.icon.is-small.is-left
               i.fa.fa-search
-    table.table.is-fullwidth
+    table.table.is-fullwidth(v-if="hasMissions")
       thead
         tr
           th
@@ -61,6 +65,9 @@
                 option(value="regular") Regular
                 option(value="veteran") Veteran
                 option(value="custom") Custom
+    .centered-placeholder(v-else)
+      p.title.is-6 No Missions Found
+      p.subtitle.is-7 Add missions to your #[b MPMissions] directory
     .columns
       .column
         p.hint
@@ -71,16 +78,28 @@
           p.difficulty.is-size-7 Set Global Difficulty
           .field.has-addons
             p.control
-              a.button.is-small.is-warning.is-outlined(@click="globalDifficulty('recruit')")
+              a.button.is-small.is-warning.is-outlined(
+                @click="globalDifficulty('recruit')"
+                :disabled="!hasMissions"
+              )
                 | Recruit
             p.control
-              a.button.is-small.is-warning.is-outlined(@click="globalDifficulty('regular')")
+              a.button.is-small.is-warning.is-outlined(
+                @click="globalDifficulty('regular')"
+                :disabled="!hasMissions"
+              )
                 | Regular
             p.control
-              a.button.is-small.is-warning.is-outlined(@click="globalDifficulty('veteran')")
+              a.button.is-small.is-warning.is-outlined(
+                @click="globalDifficulty('veteran')"
+                :disabled="!hasMissions"
+              )
                 | Veteran
             p.control
-              a.button.is-small.is-warning.is-outlined(@click="globalDifficulty('custom')")
+              a.button.is-small.is-warning.is-outlined(
+                @click="globalDifficulty('custom')"
+                :disabled="!hasMissions"  
+              )
                 | Custom
   </template>
 
@@ -104,6 +123,7 @@
     data() {
       return {
         search: '',
+        isRefreshing: false,
         options: {
           handle: '.drag-handle',
           ghostClass: 'ghost',
@@ -117,7 +137,7 @@
           return this.$store.state.missions.available;
         },
         set(missions) {
-          this.$store.commit('UPDATE_MISSIONS', missions);
+          this.$store.commit('REORDER_MISSIONS', missions);
         }
       },
       missionCount() {
@@ -128,6 +148,9 @@
           if (mission.enabled) count += 1;
           return count;
         }, 0);
+      },
+      hasMissions() {
+        return this.missionCount > 0;
       }
     },
     methods: {
@@ -153,6 +176,19 @@
         if (this.search === '') return false;
         const re = new RegExp(this.search, 'ig');
         return !name.match(re);
+      },
+      async refresh() {
+        try {
+          this.isRefreshing = true;
+          await this.$store.dispatch('REFRESH_MISSIONS');
+          this.$toasted.success('Missions refreshed');
+        } catch (e) {
+          this.$toasted.error(e.message);
+        }
+
+        setTimeout(() => {
+          this.isRefreshing = false;
+        }, 500);
       }
     },
     filters: {

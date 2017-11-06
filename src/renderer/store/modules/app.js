@@ -13,15 +13,15 @@ const mutations = {
 };
 
 const actions = {
-  INITIALIZE_LAUNCHER(context) {
-    return System.getAppPath().then((path) => {
-      context.commit('SET_APP_DIRECTORY', path);
-    });
+  async INITIALIZE_LAUNCHER(context) {
+    const path = await System.getAppPath();
+    context.commit('SET_APP_DIRECTORY', path);
+
+    await context.dispatch('REFRESH_MISSIONS');
   },
-  UPDATE_APP_DIRECTORY(context, path) {
-    return System.setAppPath(path).then(() => {
-      context.commit('SET_APP_DIRECTORY', path);
-    });
+  async UPDATE_APP_DIRECTORY(context, path) {
+    const result = await System.setAppPath(path);
+    context.commit('SET_APP_DIRECTORY', result);
   }
 };
 

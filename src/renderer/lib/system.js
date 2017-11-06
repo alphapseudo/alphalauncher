@@ -2,8 +2,8 @@ import Registry from 'winreg';
 import Path from 'path';
 import { promisifyAll, promisify } from 'bluebird';
 import { access, constants as permissions } from 'fs';
-// import { exec } from 'child_process';
 import constants from '../constants';
+// import { remote } from 'electron';
 
 const checkFile = promisify(access);
 
@@ -69,6 +69,8 @@ class System {
 
   /**
    * Validate application path and set it on success.
+   * @param {String} path Application path
+   * @returns {String} Path on success
    */
   async setAppPath(path) {
     const validPath = await System.validatePath(path);
@@ -114,15 +116,6 @@ class System {
         this.executable = false;
       }
     }
-
-    // exec(`"${this.executable}"`, (error, stdout, stderr) => {
-    //   if (error) {
-    //     console.error(`exec error: ${error}`);
-    //     return;
-    //   }
-    //   console.log(`stdout: ${stdout}`);
-    //   console.log(`stderr: ${stderr}`);
-    // });
 
     return this.executable;
   }

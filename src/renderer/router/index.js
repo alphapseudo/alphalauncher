@@ -50,7 +50,9 @@ export default new Router({
   scrollBehavior() {
     const configuration = document.getElementsByClassName('configuration')[0];
     if (configuration) {
-      configuration.scrollTop = 0;
+      setTimeout(() => {
+        configuration.scrollTop = 0;
+      }, 200);
     }
   }
 });
