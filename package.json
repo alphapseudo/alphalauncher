@@ -48,7 +48,8 @@
       "icon": "build/icons/icon.icns"
     },
     "win": {
-      "icon": "build/icons/icon.ico"
+      "icon": "build/icons/icon.ico",
+      "target": "portable"
     },
     "linux": {
       "icon": "build/icons"
@@ -61,7 +62,6 @@
     "bulma-checkradio": "^0.0.9",
     "bulma-slider": "^0.0.2",
     "bulma-switch": "^0.0.4",
-    "electron": "^1.7.5",
     "font-awesome": "^4.7.0",
     "jquery": "^3.2.1",
     "lodash": "^4.17.4",
@@ -96,6 +96,7 @@
     "css-loader": "^0.28.4",
     "del": "^3.0.0",
     "devtron": "^1.4.0",
+    "electron": "^1.7.5",
     "electron-builder": "^19.19.1",
     "electron-debug": "^1.4.0",
     "electron-devtools-installer": "^2.2.0",

@@ -10,27 +10,27 @@
       .column
         .field.has-addons
           p.control
-            a.button.is-small.is-info(@click="selectAll")
+            a.button.is-small.is-info(@click="selectAll" :disabled="!hasMissions")
               span.icon
                 i.fa.fa-check-square-o
               span.text Select All
           p.control
-            a.button.is-small.is-info(@click="deselectAll")
+            a.button.is-small.is-info(@click="deselectAll" :disabled="!hasMissions")
               span.icon
                 i.fa.fa-square-o
               span.text Deselect All
           p.control
-            a.button.is-small.is-info(@click="invert")
+            a.button.is-small.is-info(@click="invert" :disabled="!hasMissions")
               span.icon
                 i.fa.fa-adjust
               span.text Invert
       .column.is-narrow
         .field
           p.control.has-icons-left
-            input.input.is-small(type="text" placeholder="Search..." v-model.trim="search")
+            input.input.is-small(type="text" placeholder="Search..." v-model.trim="search" :disabled="!hasMissions")
             span.icon.is-small.is-left
               i.fa.fa-search
-    table.table.is-fullwidth
+    table.table.is-fullwidth(v-if="hasMissions")
       thead
         tr
           th
@@ -61,6 +61,9 @@
                 option(value="regular") Regular
                 option(value="veteran") Veteran
                 option(value="custom") Custom
+    .centered-placeholder(v-else)
+      p.title.is-6 No Missions Found
+      p.subtitle.is-7 Add missions to your #[b MPMissions] directory
     .columns
       .column
         p.hint
@@ -71,16 +74,28 @@
           p.difficulty.is-size-7 Set Global Difficulty
           .field.has-addons
             p.control
-              a.button.is-small.is-warning.is-outlined(@click="globalDifficulty('recruit')")
+              a.button.is-small.is-warning.is-outlined(
+                @click="globalDifficulty('recruit')"
+                :disabled="!hasMissions"
+              )
                 | Recruit
             p.control
-              a.button.is-small.is-warning.is-outlined(@click="globalDifficulty('regular')")
+              a.button.is-small.is-warning.is-outlined(
+                @click="globalDifficulty('regular')"
+                :disabled="!hasMissions"
+              )
                 | Regular
             p.control
-              a.button.is-small.is-warning.is-outlined(@click="globalDifficulty('veteran')")
+              a.button.is-small.is-warning.is-outlined(
+                @click="globalDifficulty('veteran')"
+                :disabled="!hasMissions"
+              )
                 | Veteran
             p.control
-              a.button.is-small.is-warning.is-outlined(@click="globalDifficulty('custom')")
+              a.button.is-small.is-warning.is-outlined(
+                @click="globalDifficulty('custom')"
+                :disabled="!hasMissions"  
+              )
                 | Custom
   </template>
 
@@ -128,6 +143,9 @@
           if (mission.enabled) count += 1;
           return count;
         }, 0);
+      },
+      hasMissions() {
+        return this.missionCount > 0;
       }
     },
     methods: {

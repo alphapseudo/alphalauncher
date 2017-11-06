@@ -1,77 +1,7 @@
-const mockMissions = [
-  {
-    name: '[SP%2fMP]Dynamic%20War%20System%201%2e70',
-    level: 'Takistan',
-    difficulty: 'recruit',
-    enabled: false
-  },
-  {
-    name: 'Dynamic%20Universal%20War%20System%20-%20Rebirth',
-    level: 'Esseker',
-    difficulty: 'recruit',
-    enabled: false
-  },
-  {
-    name: 'Tanoa_Experimental_Mission1',
-    level: 'Tanoa',
-    difficulty: 'recruit',
-    enabled: false
-  },
-  {
-    name: 'Tanoa_Experimental_Mission2',
-    level: 'Tanoa',
-    difficulty: 'recruit',
-    enabled: false
-  },
-  {
-    name: 'Tanoa_Experimental_Mission3',
-    level: 'Tanoa',
-    difficulty: 'recruit',
-    enabled: false
-  },
-  {
-    name: 'Tanoa_Experimental_Mission4',
-    level: 'Tanoa',
-    difficulty: 'recruit',
-    enabled: false
-  },
-  {
-    name: 'Tanoa_Experimental_Mission5',
-    level: 'Tanoa',
-    difficulty: 'recruit',
-    enabled: false
-  },
-  {
-    name: 'Tanoa_Experimental_Mission6',
-    level: 'Tanoa',
-    difficulty: 'recruit',
-    enabled: false
-  },
-  {
-    name: 'Tanoa_Experimental_Mission7',
-    level: 'Tanoa',
-    difficulty: 'recruit',
-    enabled: false
-  },
-  {
-    name: 'Tanoa_Experimental_Mission8',
-    level: 'Tanoa',
-    difficulty: 'recruit',
-    enabled: false
-  },
-  {
-    name: 'Tanoa_Experimental_Mission9',
-    level: 'Tanoa',
-    difficulty: 'recruit',
-    enabled: false
-  }
-];
 
-const defaults = {
-  available: mockMissions
+const state = {
+  available: []
 };
-
-const state = defaults;
 
 const mutations = {
   UPDATE_MISSIONS(state, missions) {

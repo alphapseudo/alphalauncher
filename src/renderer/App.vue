@@ -24,7 +24,8 @@
                 router-link(to="/settings").button.is-success
                   i.fa.fa-wrench
             .column.is-two-thirds.configuration
-              router-view
+              transition(name="fade-fast" mode="out-in")
+                router-view
       spinner.spinner(
         size="large"
         line-bg-color="#363636"
@@ -205,8 +206,12 @@
   .fade-enter-active, .fade-leave-active {
     transition: opacity .5s
   }
-  .fade-enter, .fade-leave-to {
+  .fade-enter, .fade-leave-to,
+  .fade-fast-enter, .fade-fast-leave-to {
     opacity: 0
+  }
+  .fade-fast-enter-active, .fade-fast-leave-active {
+    transition: opacity .15s
   }
 
   // Table
@@ -255,6 +260,17 @@
     background-color: $white-ter !important;
     color: $grey-darker !important;
     opacity: 0.5;
+  }
+
+  // Containers
+  .centered-placeholder {
+    display: flex;
+    flex-direction: column;
+    height: 18em;
+    margin-bottom: 1em;
+    background: $black-ter;
+    align-items: center;
+    justify-content: center;
   }
 
   @import "~bulma";

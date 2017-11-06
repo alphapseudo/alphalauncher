@@ -1,4 +1,5 @@
 import System from '../../lib/system';
+import Application from '../../lib/application';
 
 const state = {
   appLocation: null,
@@ -13,15 +14,16 @@ const mutations = {
 };
 
 const actions = {
-  INITIALIZE_LAUNCHER(context) {
-    return System.getAppPath().then((path) => {
-      context.commit('SET_APP_DIRECTORY', path);
-    });
+  async INITIALIZE_LAUNCHER(context) {
+    const path = await System.getAppPath();
+    context.commit('SET_APP_DIRECTORY', path);
+
+    const missions = await Application.getMissions();
+    context.commit('UPDATE_MISSIONS', missions);
   },
-  UPDATE_APP_DIRECTORY(context, path) {
-    return System.setAppPath(path).then(() => {
-      context.commit('SET_APP_DIRECTORY', path);
-    });
+  async UPDATE_APP_DIRECTORY(context, path) {
+    const result = await System.setAppPath(path);
+    context.commit('SET_APP_DIRECTORY', result);
   }
 };
 
