@@ -14,6 +14,7 @@ class Application {
   constructor() {
     this.missionDir = 'MPMissions';
   }
+
   async getMissions() {
     const base = await System.getAppPath();
     const absolute = path.normalize(path.join(base, this.missionDir));

@@ -1,3 +1,4 @@
+import Application from '../../lib/application';
 
 const state = {
   available: []
@@ -5,6 +6,12 @@ const state = {
 
 const mutations = {
   UPDATE_MISSIONS(state, missions) {
+    const comparitor = (a, b) => `${a.name}.${a.level}` === `${b.name}.${b.level}`;
+    const intersect = _.intersectionWith(state.available, missions, comparitor);
+    const difference = _.differenceWith(missions, intersect, comparitor);
+    state.available = _.concat(intersect, difference);
+  },
+  REORDER_MISSIONS(state, missions) {
     state.available = missions;
   },
   TOGGLE_MISSION(state, index) {
@@ -24,7 +31,15 @@ const mutations = {
   }
 };
 
+const actions = {
+  async REFRESH_MISSIONS(context) {
+    const missions = await Application.getMissions();
+    context.commit('UPDATE_MISSIONS', missions);
+  }
+};
+
 export default {
   state,
-  mutations
+  mutations,
+  actions
 };

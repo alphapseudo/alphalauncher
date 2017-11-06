@@ -13,17 +13,21 @@
             a.button.is-small.is-info(@click="selectAll" :disabled="!hasMissions")
               span.icon
                 i.fa.fa-check-square-o
-              span.text Select All
+              span.text Select
           p.control
             a.button.is-small.is-info(@click="deselectAll" :disabled="!hasMissions")
               span.icon
                 i.fa.fa-square-o
-              span.text Deselect All
+              span.text Deselect
           p.control
             a.button.is-small.is-info(@click="invert" :disabled="!hasMissions")
               span.icon
                 i.fa.fa-adjust
               span.text Invert
+          p.control
+            a.button.is-small.is-success(@click="refresh")
+              span.icon(v-tippy="{delay: 500}" title="Refresh mission list")
+                i.fa.fa-refresh(:class="{'fa-spin': isRefreshing}")
       .column.is-narrow
         .field
           p.control.has-icons-left
@@ -119,6 +123,7 @@
     data() {
       return {
         search: '',
+        isRefreshing: false,
         options: {
           handle: '.drag-handle',
           ghostClass: 'ghost',
@@ -132,7 +137,7 @@
           return this.$store.state.missions.available;
         },
         set(missions) {
-          this.$store.commit('UPDATE_MISSIONS', missions);
+          this.$store.commit('REORDER_MISSIONS', missions);
         }
       },
       missionCount() {
@@ -171,6 +176,19 @@
         if (this.search === '') return false;
         const re = new RegExp(this.search, 'ig');
         return !name.match(re);
+      },
+      async refresh() {
+        try {
+          this.isRefreshing = true;
+          await this.$store.dispatch('REFRESH_MISSIONS');
+          this.$toasted.success('Missions refreshed');
+        } catch (e) {
+          this.$toasted.error(e.message);
+        }
+
+        setTimeout(() => {
+          this.isRefreshing = false;
+        }, 500);
       }
     },
     filters: {

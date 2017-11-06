@@ -1,5 +1,4 @@
 import System from '../../lib/system';
-import Application from '../../lib/application';
 
 const state = {
   appLocation: null,
@@ -18,8 +17,7 @@ const actions = {
     const path = await System.getAppPath();
     context.commit('SET_APP_DIRECTORY', path);
 
-    const missions = await Application.getMissions();
-    context.commit('UPDATE_MISSIONS', missions);
+    await context.dispatch('REFRESH_MISSIONS');
   },
   async UPDATE_APP_DIRECTORY(context, path) {
     const result = await System.setAppPath(path);
