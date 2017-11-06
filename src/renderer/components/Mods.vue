@@ -10,27 +10,31 @@
       .column
         .field.has-addons
           p.control
-            a.button.is-small.is-info(@click="selectAll")
+            a.button.is-small.is-info(@click="selectAll" :disabled="!hasMods")
               span.icon
                 i.fa.fa-check-square-o
-              span.text Select All
+              span.text Select
           p.control
-            a.button.is-small.is-info(@click="deselectAll")
+            a.button.is-small.is-info(@click="deselectAll" :disabled="!hasMods")
               span.icon
                 i.fa.fa-square-o
-              span.text Deselect All
+              span.text Deselect
           p.control
-            a.button.is-small.is-info(@click="invert")
+            a.button.is-small.is-info(@click="invert" :disabled="!hasMods")
               span.icon
                 i.fa.fa-adjust
               span.text Invert
+          p.control
+            a.button.is-small.is-success(@click="refresh")
+              span.icon(v-tippy="{delay: 500}" title="Refresh mod list")
+                i.fa.fa-refresh(:class="{'fa-spin': isRefreshing}")
       .column.is-narrow
         .field
           p.control.has-icons-left
-            input.input.is-small(type="text" placeholder="Search..." v-model.trim="search")
+            input.input.is-small(type="text" placeholder="Search..." v-model.trim="search" :disabled="!hasMods")
             span.icon.is-small.is-left
               i.fa.fa-search
-    table.table.is-fullwidth
+    table.table.is-fullwidth(v-if="hasMods")
       thead
         tr
           th
@@ -40,7 +44,7 @@
         tr(
           v-for="(mod, index) in mods"
           :key="mod.name"
-          :class="{isHidden: missesSearch(mod.name)}"
+          :class="{isHidden: isFiltered(mod)}"
         )
           td
             span.drag-handle
@@ -51,9 +55,11 @@
               :checked="mod.enabled"
             )
             label(@click="toggleMod(index)")
-              | {{ mod.name | decode }}
+              | {{ mod.name | decode | strip }}
           td
             i.fa.fa-steam(v-if="mod.isSteam")
+    .centered-placeholder(v-else)
+      p.title.is-6 No Mods Found
     .columns
       .column
         p.hint
@@ -62,6 +68,13 @@
           | Click on a mod #[i.fa.fa-check] to enable / disable.
           br
           | #[i.fa.fa-steam] denotes a Steam Workshop modification.
+      .column.is-narrow
+        .field
+          input#workshop.switch.is-success.is-small(type="checkbox" v-model="showWorkshop" :disabled="!hasMods")
+          label.label.is-small(for="workshop") Show Workshop Mods
+        .field
+          input#hide.switch.is-success.is-small(type="checkbox" v-model="hideUnselected" :disabled="!hasMods")
+          label.label.is-small(for="hide") Hide Unselected
 </template>
 
 <script>
@@ -84,6 +97,9 @@
     data() {
       return {
         search: '',
+        showWorkshop: true,
+        hideUnselected: false,
+        isRefreshing: false,
         options: {
           handle: '.drag-handle',
           ghostClass: 'ghost',
@@ -97,7 +113,7 @@
           return this.$store.state.mods.available;
         },
         set(mods) {
-          this.$store.commit('UPDATE_MODS', mods);
+          this.$store.commit('REORDER_MODS', mods);
         }
       },
       modCount() {
@@ -108,6 +124,9 @@
           if (mod.enabled) count += 1;
           return count;
         }, 0);
+      },
+      hasMods() {
+        return this.modCount > 0;
       }
     },
     methods: {
@@ -123,15 +142,34 @@
       invert() {
         this.$store.commit('INVERT_MODS');
       },
-      missesSearch(name) {
-        if (this.search === '') return false;
+      isFiltered(mod) {
         const re = new RegExp(this.search, 'ig');
-        return !name.match(re);
+        const missesSearch = !mod.name.match(re);
+        const hideSteam = !this.showWorkshop && mod.isSteam;
+        const unselectHide = this.hideUnselected && !mod.enabled;
+
+        return missesSearch || hideSteam || unselectHide;
+      },
+      async refresh() {
+        try {
+          this.isRefreshing = true;
+          await this.$store.dispatch('REFRESH_MODS');
+          this.$toasted.success('Mods Successfully Refreshed');
+        } catch (e) {
+          this.$toasted.error('Error refreshing mods. Please check permissions');
+        }
+
+        setTimeout(() => {
+          this.isRefreshing = false;
+        }, 500);
       }
     },
     filters: {
       decode(name) {
         return decodeURIComponent(name);
+      },
+      strip(name) {
+        return name.replace(/^@/, '');
       }
     },
     components: { Draggable }

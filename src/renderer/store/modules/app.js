@@ -13,11 +13,14 @@ const mutations = {
 };
 
 const actions = {
+  // TODO These errors will prevent the app from loading. aka a showstopper
+  // Load the app with defaults and toast issues
   async INITIALIZE_LAUNCHER(context) {
     const path = await System.getAppPath();
     context.commit('SET_APP_DIRECTORY', path);
 
     await context.dispatch('REFRESH_MISSIONS');
+    await context.dispatch('REFRESH_MODS');
   },
   async UPDATE_APP_DIRECTORY(context, path) {
     const result = await System.setAppPath(path);

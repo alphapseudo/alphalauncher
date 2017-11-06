@@ -288,6 +288,11 @@
     justify-content: center;
   }
 
+  // Toast Overrides
+  .toasted-container.bottom-right {
+    bottom: 5% !important;
+  }
+
   @import "~bulma";
   @import "~bulma-switch/switch.sass";
   @import "~bulma-slider/slider.sass";

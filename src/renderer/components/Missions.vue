@@ -181,9 +181,9 @@
         try {
           this.isRefreshing = true;
           await this.$store.dispatch('REFRESH_MISSIONS');
-          this.$toasted.success('Missions refreshed');
+          this.$toasted.success('Missions Successfully Refreshed');
         } catch (e) {
-          this.$toasted.error(e.message);
+          this.$toasted.error('Error reading \'MPMissions\'. Please check permissions');
         }
 
         setTimeout(() => {
