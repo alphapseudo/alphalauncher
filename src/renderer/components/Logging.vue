@@ -54,7 +54,7 @@
           label.label.is-small(for="netlog") Netlog
           .control
             input#netlog.switch.is-success.is-small(type="checkbox" v-model="netlog")
-            label
+            label(for="netlog")
               +tooltip('Enables multiplayer network traffic logging. This affects performance')
         .field
           label.label.is-small Timestamp Format

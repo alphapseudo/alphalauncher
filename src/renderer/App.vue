@@ -34,16 +34,24 @@
                       span #[i.fa.fa-fw.fa-terminal]
                       | Scripting
               .controls
-                .buttons
-                  span.control
-                    a.button.is-warning.is-medium.is-outlined(
-                      @click="globalDifficulty('recruit')"
+                p.control
+                  a.button.is-warning.is-medium.is-outlined.is-fullwidth(
+                    :disabled="!appPath"
+                  ) LAUNCH
+                .sub-controls.field.has-addons.is-pulled-right
+                  p.control
+                    router-link(
+                      to="/settings"
+                      v-tippy="{delay: 500}" title="Launcher Settings"
+                    ).button.is-transparent
+                      span.icon
+                        i.fa.fa-gear
+                  p.control
+                    a.button.is-transparent(
+                      v-tippy="{delay: 500}" title="Save Profile"
                     )
-                      | LAUNCH
-                  .field.has-addons
-                    span.control
-                      router-link(to="/settings").button.is-medium.is-success
-                        i.fa.fa-wrench
+                      span.icon
+                        i.fa.fa-save
             .column.is-two-thirds.configuration
               transition(name="fade-fast" mode="out-in")
                 router-view
@@ -55,10 +63,20 @@
         message="Loading..."
         v-else
       )
+    .fixed-controls.field.has-addons
+      p.control
+        a.button.is-transparent(@click="minimize")
+          span.icon
+            i.fa.fa-minus
+      p.control
+        a.button.is-transparent.is-danger(@click="close")
+          span.icon
+            i.fa.fa-close
 </template>
 
 <script>
   import Spinner from 'vue-simple-spinner';
+  import { remote } from 'electron';
 
   export default {
     name: 'AlphaLauncher',
@@ -82,6 +100,12 @@
     methods: {
       removeLoading() {
         this.isLoading = false;
+      },
+      minimize() {
+        remote.BrowserWindow.getFocusedWindow().minimize();
+      },
+      close() {
+        remote.BrowserWindow.getFocusedWindow().close();
       }
     },
     components: { spinner: Spinner }
@@ -96,8 +120,8 @@
   $text: $white;
   $text-light: $grey-lighter;
   $text-strong: $white;
-  $background: $grey;
   $body-background-color: $grey-darker;
+  $background: $grey;
   
   $title-color: $white;
   $subtitle-color: $white-ter;
@@ -121,6 +145,7 @@
   html, body {
     height: 100%;
     overflow: hidden !important;
+    background: linear-gradient(to left, #485563, #29323c);
   }
   
   body {
@@ -129,6 +154,7 @@
     a, .configuration { -webkit-app-region: no-drag }
   }
 
+  // Spinners
   .spinner {
     display: flex;
     height: 100%;
@@ -137,6 +163,7 @@
     align-items: center;
   }
 
+  // Scrollbars
   ::-webkit-scrollbar {
     width: 8px;
     background-color: rgba(0,0,0,0);
@@ -153,10 +180,12 @@
     }
   }
 
+  // Placeholders
   ::-webkit-input-placeholder {
     color: $grey-light !important;
   }
 
+  // Tooltips
   .tippy-tooltip {
     border: 1px solid $grey;
   }
@@ -165,7 +194,14 @@
     background-color: $black-ter !important;
   }
 
+  // Layout
   #app > .columns { height: 100% }
+
+  .subtitle.version {
+    font-size: 0.8em;
+    color: $grey;
+    text-align: right;
+  }
 
   .column.is-one-third.navigation {
     border-right: 1px solid $grey;
@@ -187,8 +223,13 @@
 
   .input[type="number"] { width: 6em }
   
-  .configuration { overflow: auto }
+  .configuration {
+    overflow: auto;
+    padding-top: 0 !important;
+    margin-top: 0.85em;
+  }
 
+  // Helpers
   .no-grow { flex-grow: 0 !important }
 
   .switch+label { padding-top: 0 !important }
@@ -197,14 +238,10 @@
 
   .isHidden { display: none }
 
-  .subtitle.version {
-    font-size: 0.8em;
-    color: $grey;
-    text-align: right;
-  }
-
-  #app { 
+  // General Theme Overrides
+  #app {
     height: 100vh;
+    padding: 2rem 1.5rem 1.5rem;
     .input, textarea, select {
       background: $black-ter;
       color: $white;
@@ -281,12 +318,14 @@
     }
   }
 
+  // Hint & Ghosts
   .hint {
     font-size: 0.8rem;
     margin-top: 0.2rem;
     .fa { margin: 0 0.3rem }
     .fa-check { color: $check-green }
   }
+
   .ghost {
     background-color: $white-ter !important;
     color: $grey-darker !important;
@@ -307,6 +346,30 @@
   // Toast Overrides
   .toasted-container.bottom-right {
     bottom: 5% !important;
+  }
+
+  // Controls & Buttons
+  .button.is-transparent {
+    background-color: transparent !important;
+    border: 0;
+    color: $white;
+    &:hover {
+      color: $grey-lighter;
+      &.is-danger { color: $red }
+    }
+    &:focus:not(:active) { box-shadow: none }
+    &.is-active { color: $yellow }
+  }
+
+  .sub-controls {
+    margin-bottom: -1.4em;
+    a { padding: 0.75em 0.5em }
+  }
+
+  .fixed-controls {
+    position: fixed;
+    top: 0;
+    right: 0.1em;
   }
 
   @import "~bulma";

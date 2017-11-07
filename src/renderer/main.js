@@ -9,6 +9,7 @@ import store from './store';
 
 Vue.use(Tippy, {
   size: 'small',
+  distance: 5,
   animation: 'perspective'
 });
 
