@@ -12,7 +12,8 @@ module.exports = {
   globals: {
     __static: true,
     _: true,
-    $: true
+    $: true,
+    APP_VERSION: true
   },
   plugins: [
     'html'

@@ -5,6 +5,7 @@
         .columns.is-mobile
             .column.is-one-third.navigation
               h3.title.is-3 AlphaLauncher
+              p.subtitle.version v{{ version }}
               aside.menu
                 .menu-label Configuration
                 ul.menu-list(:class="{'is-disabled': !appPath}")
@@ -33,8 +34,16 @@
                       span #[i.fa.fa-fw.fa-terminal]
                       | Scripting
               .controls
-                router-link(to="/settings").button.is-success
-                  i.fa.fa-wrench
+                .buttons
+                  span.control
+                    a.button.is-warning.is-medium.is-outlined(
+                      @click="globalDifficulty('recruit')"
+                    )
+                      | LAUNCH
+                  .field.has-addons
+                    span.control
+                      router-link(to="/settings").button.is-medium.is-success
+                        i.fa.fa-wrench
             .column.is-two-thirds.configuration
               transition(name="fade-fast" mode="out-in")
                 router-view
@@ -59,7 +68,8 @@
       };
     },
     computed: {
-      appPath() { return this.$store.state.app.appLocation; }
+      appPath() { return this.$store.state.app.appLocation; },
+      version() { return this.$store.state.app.version; }
     },
     mounted() {
       this.$store.dispatch('INITIALIZE_LAUNCHER').then(() => {
@@ -186,6 +196,12 @@
   .no-margin-bottom { margin-bottom: 0 !important }
 
   .isHidden { display: none }
+
+  .subtitle.version {
+    font-size: 0.8em;
+    color: $grey;
+    text-align: right;
+  }
 
   #app { 
     height: 100vh;
