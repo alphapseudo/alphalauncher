@@ -1,7 +1,6 @@
 import { readdir } from 'fs';
-import path from 'path';
+import Path from 'path';
 import { promisify } from 'bluebird';
-import System from './system';
 import constants from '../constants';
 
 const {
@@ -12,65 +11,41 @@ const {
 const readdirAsync = promisify(readdir);
 
 class Application {
-  constructor() {
-    this.missionDirectory = 'MPMissions';
-    this.workshopDirectory = '!Workshop';
-    this.additionalDirectories = [];
-  }
-
-  async getMissions() {
-    const base = await System.getAppPath();
-    const absolute = path.normalize(path.join(base, this.missionDirectory));
-    const files = await readdirAsync(absolute);
-
-    const missions = files
-      .filter(file => MISSION_REGEX.test(file))
-      .map((mission) => {
-        const [name, level] = mission.split('.');
-        return {
-          name,
-          level,
-          difficulty: 'recruit',
-          enabled: false
-        };
-      });
-
-    return missions;
-  }
-
-  async getWorkshopMods() {
-    const base = await System.getAppPath();
-    const absolute = path.normalize(path.join(base, this.workshopDirectory));
-
+  static async getMissions(appRoot) {
     try {
-      const files = await readdirAsync(absolute);
-      const mods = files
-        .filter(file => MOD_REGEX.test(file))
-        .map(mod => ({
-          name: mod,
-          path: path.join(absolute, mod),
-          isSteam: true,
-          enabled: false
-        }));
-      return mods;
+      const path = Path.join(appRoot, 'MPMissions');
+
+      const files = await readdirAsync(path);
+      const missions = files.filter(file => MISSION_REGEX.test(file))
+        .map((mission) => {
+          const [name, level] = mission.split('.');
+          return {
+            name,
+            level,
+            difficulty: 'recruit',
+            enabled: false
+          };
+        });
+
+      return missions;
     } catch (e) {
       return [];
     }
   }
 
-  async getLocalMods() {
-    const appRoot = await System.getAppPath();
-    const directories = [appRoot].concat(this.additionalDirectories);
-
-    const mods = directories.reduce(async (aggregate, directory) => {
+  static async getMods(appRoot, directories) {
+    const mods = await directories.reduce(async (aggregate, path) => {
       try {
-        const files = await readdirAsync(directory);
-        const mods = files
-          .filter(file => MOD_REGEX.test(file))
+        aggregate = await aggregate;
+
+        const resolved = Path.isAbsolute(path) ? path : Path.join(appRoot, path);
+
+        const files = await readdirAsync(resolved);
+        const mods = files.filter(file => MOD_REGEX.test(file))
           .map(mod => ({
             name: mod,
-            path: mod,
-            isSteam: false,
+            path: resolved,
+            isSteam: path === '!Workshop',
             enabled: false
           }));
         return aggregate.concat(mods);
@@ -81,12 +56,6 @@ class Application {
 
     return mods;
   }
-
-  async getMods() {
-    const localMods = await this.getLocalMods();
-    const steamMods = await this.getWorkshopMods();
-    return steamMods.concat(localMods);
-  }
 }
 
-export default new Application();
+export default Application;

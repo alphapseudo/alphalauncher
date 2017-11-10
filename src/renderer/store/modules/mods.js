@@ -1,8 +1,11 @@
-import Application from '../../lib/application';
-
-const state = {
-  available: []
+const defaults = {
+  available: [],
+  directories: [
+    '!Workshop',
+    '.'
+  ]
 };
+const state = _.merge({}, defaults);
 
 const mutations = {
   UPDATE_MODS(state, mods) {
@@ -22,18 +25,15 @@ const mutations = {
   },
   INVERT_MODS(state) {
     state.available.forEach((mod) => { mod.enabled = !mod.enabled; });
-  }
-};
-
-const actions = {
-  async REFRESH_MODS(context) {
-    const mods = await Application.getMods();
-    context.commit('UPDATE_MODS', mods);
+  },
+  RESET_MODS(state) {
+    state.available.forEach((mod) => {
+      mod.enabled = false;
+    });
   }
 };
 
 export default {
   state,
-  mutations,
-  actions
+  mutations
 };

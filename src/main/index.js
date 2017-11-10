@@ -20,10 +20,9 @@ function createWindow() {
   mainWindow = new BrowserWindow({
     height: 563,
     useContentSize: true,
-    titleBarStyle: 'hidden',
     frame: false,
     width: 905,
-    backgroundColor: '#363636'
+    backgroundColor: '#29323c'
   });
 
   mainWindow.loadURL(winURL);

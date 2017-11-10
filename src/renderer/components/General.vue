@@ -236,8 +236,8 @@
         set(v) { this.$store.commit('UPDATE_CONFIG', ['motdInterval', v]); }
       },
       be: {
-        get() { return this.$store.state.config.BattlEye; },
-        set(v) { this.$store.commit('UPDATE_CONFIG', ['BattlEye', v]); }
+        get() { return this.$store.state.config.battlEye; },
+        set(v) { this.$store.commit('UPDATE_CONFIG', ['battlEye', v]); }
       },
       persistent: {
         get() { return this.$store.state.config.persistent; },

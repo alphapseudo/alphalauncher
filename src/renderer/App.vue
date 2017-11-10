@@ -5,6 +5,7 @@
         .columns.is-mobile
             .column.is-one-third.navigation
               h3.title.is-3 AlphaLauncher
+              p.subtitle.version v{{ version }}
               aside.menu
                 .menu-label Configuration
                 ul.menu-list(:class="{'is-disabled': !appPath}")
@@ -33,8 +34,35 @@
                       span #[i.fa.fa-fw.fa-terminal]
                       | Scripting
               .controls
-                router-link(to="/settings").button.is-success
-                  i.fa.fa-wrench
+                p.control
+                  a.button.is-warning.is-medium.is-outlined.is-fullwidth(
+                    :disabled="!appPath"
+                    @click="launch"
+                  ) LAUNCH
+                .sub-controls.field.has-addons.is-pulled-right
+                  p.control
+                    router-link(
+                      to="/settings"
+                      v-tippy="{delay: 500}" title="Launcher Settings"
+                    ).button.is-transparent
+                      span.icon
+                        i.fa.fa-gear
+                  p.control
+                    a.button.is-transparent(
+                      v-tippy="{delay: 500}" title="Restore Defaults"
+                      @click="reset"
+                      :disabled="!appPath"
+                    )
+                      span.icon
+                        i.fa.fa-undo
+                  p.control
+                    a.button.is-transparent(
+                      v-tippy="{delay: 500}" title="Save Profile"
+                      @click="save"
+                      :disabled="!appPath"
+                    )
+                      span.icon
+                        i.fa.fa-save
             .column.is-two-thirds.configuration
               transition(name="fade-fast" mode="out-in")
                 router-view
@@ -46,10 +74,25 @@
         message="Loading..."
         v-else
       )
+    .fixed-controls.field.has-addons
+      p.control(v-if="!isLoading")
+        a.button.is-transparent
+          span.icon
+            i.fa.fa-user
+          span {{ profile }}
+      p.control
+        a.button.is-transparent(@click="minimize")
+          span.icon
+            i.fa.fa-minus
+      p.control
+        a.button.is-transparent.is-danger(@click="close")
+          span.icon
+            i.fa.fa-close
 </template>
 
 <script>
   import Spinner from 'vue-simple-spinner';
+  import { remote } from 'electron';
 
   export default {
     name: 'AlphaLauncher',
@@ -59,19 +102,59 @@
       };
     },
     computed: {
-      appPath() { return this.$store.state.app.appLocation; }
+      appPath() { return this.$store.state.app.appLocation; },
+      version() { return this.$store.state.app.version; },
+      profile() { return this.$store.state.profile; }
     },
-    mounted() {
-      this.$store.dispatch('INITIALIZE_LAUNCHER').then(() => {
-        if (!this.appPath) {
-          this.$router.push('settings');
-        }
-        this.removeLoading();
-      });
+    async mounted() {
+      await this.$store.dispatch('INITIALIZE_LAUNCHER');
+
+      const pathValid = await this.$store.dispatch('VALIDATE_PATH');
+
+      if (!pathValid) {
+        this.$store.commit('SET_APP_PATH', null);
+        this.$router.push('settings');
+      }
+
+      this.removeLoading();
     },
     methods: {
       removeLoading() {
         this.isLoading = false;
+      },
+      minimize() {
+        remote.BrowserWindow.getFocusedWindow().minimize();
+      },
+      close() {
+        remote.BrowserWindow.getFocusedWindow().close();
+      },
+      async save() {
+        if (!this.appPath) return;
+        try {
+          await this.$store.dispatch('SAVE_PROFILE');
+          this.$toasted.success('Profile Saved Successfully');
+        } catch (e) {
+          this.$toasted.error(e);
+        }
+      },
+      async launch() {
+        await this.$store.dispatch('GENERATE_CONFIG');
+      },
+      reset() {
+        if (!this.appPath) return;
+        const answer = remote.dialog.showMessageBox(
+          remote.getCurrentWindow(), {
+            type: 'question',
+            buttons: ['Yes', 'No'],
+            title: 'Confirm',
+            message: 'Are you sure you want to reset to defaults?'
+          }
+        );
+
+        if (answer === 0) {
+          this.$store.dispatch('RESET_STORE');
+          this.$toasted.success('Restored Settings to Defaults');
+        }
       }
     },
     components: { spinner: Spinner }
@@ -86,8 +169,8 @@
   $text: $white;
   $text-light: $grey-lighter;
   $text-strong: $white;
-  $background: $grey;
   $body-background-color: $grey-darker;
+  $background: $grey;
   
   $title-color: $white;
   $subtitle-color: $white-ter;
@@ -111,6 +194,7 @@
   html, body {
     height: 100%;
     overflow: hidden !important;
+    background: linear-gradient(to left, #485563, #29323c);
   }
   
   body {
@@ -119,6 +203,7 @@
     a, .configuration { -webkit-app-region: no-drag }
   }
 
+  // Spinners
   .spinner {
     display: flex;
     height: 100%;
@@ -127,6 +212,7 @@
     align-items: center;
   }
 
+  // Scrollbars
   ::-webkit-scrollbar {
     width: 8px;
     background-color: rgba(0,0,0,0);
@@ -143,10 +229,12 @@
     }
   }
 
+  // Placeholders
   ::-webkit-input-placeholder {
     color: $grey-light !important;
   }
 
+  // Tooltips
   .tippy-tooltip {
     border: 1px solid $grey;
   }
@@ -155,7 +243,14 @@
     background-color: $black-ter !important;
   }
 
+  // Layout
   #app > .columns { height: 100% }
+
+  .subtitle.version {
+    font-size: 0.8em;
+    color: $grey;
+    text-align: right;
+  }
 
   .column.is-one-third.navigation {
     border-right: 1px solid $grey;
@@ -177,8 +272,13 @@
 
   .input[type="number"] { width: 6em }
   
-  .configuration { overflow: auto }
+  .configuration {
+    overflow: auto;
+    padding-top: 0 !important;
+    margin-top: 0.85em;
+  }
 
+  // Helpers
   .no-grow { flex-grow: 0 !important }
 
   .switch+label { padding-top: 0 !important }
@@ -187,8 +287,10 @@
 
   .isHidden { display: none }
 
-  #app { 
+  // General Theme Overrides
+  #app {
     height: 100vh;
+    padding: 2rem 1.5rem 1.5rem;
     .input, textarea, select {
       background: $black-ter;
       color: $white;
@@ -265,12 +367,14 @@
     }
   }
 
+  // Hint & Ghosts
   .hint {
     font-size: 0.8rem;
     margin-top: 0.2rem;
     .fa { margin: 0 0.3rem }
     .fa-check { color: $check-green }
   }
+
   .ghost {
     background-color: $white-ter !important;
     color: $grey-darker !important;
@@ -291,6 +395,30 @@
   // Toast Overrides
   .toasted-container.bottom-right {
     bottom: 5% !important;
+  }
+
+  // Controls & Buttons
+  .button.is-transparent {
+    background-color: transparent !important;
+    border: 0;
+    color: $white;
+    &:hover {
+      color: $grey-lighter;
+      &.is-danger { color: $red }
+    }
+    &:focus:not(:active) { box-shadow: none }
+    &.is-active { color: $yellow }
+  }
+
+  .sub-controls {
+    margin-bottom: -1.4em;
+    a { padding: 0.75em 0.5em }
+  }
+
+  .fixed-controls {
+    position: fixed;
+    top: 0;
+    right: 0.1em;
   }
 
   @import "~bulma";

@@ -1,8 +1,8 @@
-import Application from '../../lib/application';
-
-const state = {
+const defaults = {
   available: []
 };
+
+const state = _.merge({}, defaults);
 
 const mutations = {
   UPDATE_MISSIONS(state, missions) {
@@ -28,18 +28,16 @@ const mutations = {
   },
   CHANGE_ALL_DIFFICULTY(state, value) {
     state.available.forEach((mission) => { mission.difficulty = value; });
-  }
-};
-
-const actions = {
-  async REFRESH_MISSIONS(context) {
-    const missions = await Application.getMissions();
-    context.commit('UPDATE_MISSIONS', missions);
+  },
+  RESET_MISSIONS(state) {
+    state.available.forEach((mission) => {
+      mission.enabled = false;
+      mission.difficulty = 'recruit';
+    });
   }
 };
 
 export default {
   state,
-  mutations,
-  actions
+  mutations
 };

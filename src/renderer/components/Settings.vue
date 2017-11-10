@@ -49,14 +49,15 @@
           properties: [
             'openDirectory'
           ]
-        }, ([path = null]) => {
-          this.$store.dispatch('UPDATE_APP_DIRECTORY', path)
-            .then(() => {
-              this.$toasted.success('Application Path Valid');
-            })
-            .catch((e) => {
-              this.$toasted.error(e.message);
-            });
+        }, async (response) => {
+          if (!response) return;
+          const [path = null] = response;
+          const result = await this.$store.dispatch('UPDATE_APP_DIRECTORY', path);
+          if (result) {
+            this.$toasted.success('Application Path Valid');
+          } else {
+            this.$toasted.error('Server executable not found, please check permissions and path');
+          }
         });
       }
     }

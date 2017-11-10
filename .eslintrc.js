@@ -12,7 +12,8 @@ module.exports = {
   globals: {
     __static: true,
     _: true,
-    $: true
+    $: true,
+    APP_VERSION: true
   },
   plugins: [
     'html'
@@ -28,6 +29,7 @@ module.exports = {
     // allow debugger during development
     'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0,
     'comma-dangle': 0,
-    "import/no-extraneous-dependencies": 0
+    'import/no-extraneous-dependencies': 0,
+    'no-restricted-syntax': 0
   }
 }
