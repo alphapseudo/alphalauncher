@@ -26,7 +26,7 @@ const defaults = {
   multipleSaves: true
 };
 
-const state = defaults;
+const state = _.merge({}, defaults);
 
 const mutations = {
   UPDATE_DIFFICULTY(state, [path, value]) {
@@ -35,6 +35,9 @@ const mutations = {
       value = 0;
     }
     state = _.set(state, path, value);
+  },
+  RESET_DIFFICULTY(state) {
+    _.merge(state, defaults);
   }
 };
 

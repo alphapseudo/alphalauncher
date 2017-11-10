@@ -37,6 +37,7 @@
                 p.control
                   a.button.is-warning.is-medium.is-outlined.is-fullwidth(
                     :disabled="!appPath"
+                    @click="launch"
                   ) LAUNCH
                 .sub-controls.field.has-addons.is-pulled-right
                   p.control
@@ -48,7 +49,17 @@
                         i.fa.fa-gear
                   p.control
                     a.button.is-transparent(
+                      v-tippy="{delay: 500}" title="Restore Defaults"
+                      @click="reset"
+                      :disabled="!appPath"
+                    )
+                      span.icon
+                        i.fa.fa-undo
+                  p.control
+                    a.button.is-transparent(
                       v-tippy="{delay: 500}" title="Save Profile"
+                      @click="save"
+                      :disabled="!appPath"
                     )
                       span.icon
                         i.fa.fa-save
@@ -64,6 +75,11 @@
         v-else
       )
     .fixed-controls.field.has-addons
+      p.control(v-if="!isLoading")
+        a.button.is-transparent
+          span.icon
+            i.fa.fa-user
+          span {{ profile }}
       p.control
         a.button.is-transparent(@click="minimize")
           span.icon
@@ -87,15 +103,20 @@
     },
     computed: {
       appPath() { return this.$store.state.app.appLocation; },
-      version() { return this.$store.state.app.version; }
+      version() { return this.$store.state.app.version; },
+      profile() { return this.$store.state.profile; }
     },
-    mounted() {
-      this.$store.dispatch('INITIALIZE_LAUNCHER').then(() => {
-        if (!this.appPath) {
-          this.$router.push('settings');
-        }
-        this.removeLoading();
-      });
+    async mounted() {
+      await this.$store.dispatch('INITIALIZE_LAUNCHER');
+
+      const pathValid = await this.$store.dispatch('VALIDATE_PATH');
+
+      if (!pathValid) {
+        this.$store.commit('SET_APP_PATH', null);
+        this.$router.push('settings');
+      }
+
+      this.removeLoading();
     },
     methods: {
       removeLoading() {
@@ -106,6 +127,34 @@
       },
       close() {
         remote.BrowserWindow.getFocusedWindow().close();
+      },
+      async save() {
+        if (!this.appPath) return;
+        try {
+          await this.$store.dispatch('SAVE_PROFILE');
+          this.$toasted.success('Profile Saved Successfully');
+        } catch (e) {
+          this.$toasted.error(e);
+        }
+      },
+      async launch() {
+        await this.$store.dispatch('GENERATE_CONFIG');
+      },
+      reset() {
+        if (!this.appPath) return;
+        const answer = remote.dialog.showMessageBox(
+          remote.getCurrentWindow(), {
+            type: 'question',
+            buttons: ['Yes', 'No'],
+            title: 'Confirm',
+            message: 'Are you sure you want to reset to defaults?'
+          }
+        );
+
+        if (answer === 0) {
+          this.$store.dispatch('RESET_STORE');
+          this.$toasted.success('Restored Settings to Defaults');
+        }
       }
     },
     components: { spinner: Spinner }

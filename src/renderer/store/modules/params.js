@@ -1,9 +1,11 @@
-const state = {
+const defaults = {
   port: 2302,
   ranking: null,
   pid: null,
   netlog: false
 };
+
+const state = _.merge({}, defaults);
 
 const mutations = {
   UPDATE_PARAMS(state, [path, value]) {
@@ -12,6 +14,9 @@ const mutations = {
       value = 0;
     }
     state = _.set(state, path, value);
+  },
+  RESET_PARAMS(state) {
+    _.merge(state, defaults);
   }
 };
 

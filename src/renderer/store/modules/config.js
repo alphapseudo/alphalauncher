@@ -39,7 +39,7 @@ const defaults = {
   regularCheck: ''
 };
 
-const state = Object.assign(defaults, {});
+const state = _.merge({}, defaults);
 
 const mutations = {
   UPDATE_CONFIG(state, [path, value]) {
@@ -48,6 +48,9 @@ const mutations = {
       value = 0;
     }
     state = _.set(state, path, value);
+  },
+  RESET_CONFIG(state) {
+    _.merge(state, defaults);
   }
 };
 
