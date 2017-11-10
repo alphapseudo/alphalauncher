@@ -79,6 +79,7 @@
 
 <script>
   import Draggable from 'vuedraggable';
+  Draggable.beforeDestroy = null;
   
   export default {
     name: 'missions',
