@@ -22,7 +22,7 @@ Handlebars.registerHelper('enabledEach', (context = [], options) => context.filt
 
 class Template {
   static async getTemplate(id) {
-    const path = Path.join(__dirname, '..', 'templates', id);
+    const path = Path.join(__static, 'templates', id);
     const template = await fs.readFileAsync(path, 'utf8');
     return Handlebars.compile(template);
   }
@@ -39,7 +39,7 @@ class Template {
   static async generateConfig(path, config, missions) {
     const state = _.merge({
       datetime: new Date().toLocaleString()
-    }, config, missions);
+    }, config, { missions });
 
     const template = await Template.getTemplate('ServerConfig.handlebars');
     return template(state);
@@ -50,7 +50,7 @@ class Template {
       app: { appLocation },
       difficulty,
       config,
-      missions,
+      missions: { available: missions },
       profile: name
     } = store;
 

@@ -17,7 +17,7 @@ const defaults = {
   disableVoN: false,
   vonCodec: 0,
   vonCodecQuality: 10,
-  verifySignatures: 2,
+  verifySignatures: 0,
   allowedFilePatching: 0,
   kickDuplicate: true,
   requiredBuild: { enabled: false, value: 0 },
@@ -50,7 +50,7 @@ const mutations = {
     state = _.set(state, path, value);
   },
   RESET_CONFIG(state) {
-    _.merge(state, defaults);
+    _.extend(state, defaults);
   }
 };
 

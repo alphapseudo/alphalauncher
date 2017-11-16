@@ -1,7 +1,5 @@
 const state = {
-  appLocation: null,
-  isRunning: false,
-  version: APP_VERSION
+  appLocation: null
 };
 
 const mutations = {

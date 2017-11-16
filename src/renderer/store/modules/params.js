@@ -2,6 +2,7 @@ const defaults = {
   port: 2302,
   ranking: null,
   pid: null,
+  autoInit: false,
   netlog: false
 };
 
@@ -16,7 +17,7 @@ const mutations = {
     state = _.set(state, path, value);
   },
   RESET_PARAMS(state) {
-    _.merge(state, defaults);
+    _.extend(state, defaults);
   }
 };
 

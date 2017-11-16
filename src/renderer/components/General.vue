@@ -66,12 +66,16 @@
           label.label.is-small(for="battleye") Battleye
             +tooltip('Enable anti-cheat system')
         .field
+          input#drawing.switch.is-success.is-small(type="checkbox" v-model="drawing")
+          label.label.is-small(for="drawing") Map Drawing
+        .field
           input#persistent.switch.is-success.is-small(type="checkbox" v-model="persistent")
           label.label.is-small(for="persistent") Persistent
             +tooltip('Mission will continue running when all clients disconnect.')
         .field
-          input#drawing.switch.is-success.is-small(type="checkbox" v-model="drawing")
-          label.label.is-small(for="drawing") Map Drawing
+          input#autoInit.switch.is-success.is-small(type="checkbox" v-model="init" :disabled="!persistent")
+          label.label.is-small(for="autoInit") AutoInit
+            +tooltip('Automatically initialize mission. Persistent must be ON')
         .field
           label.label.is-small Advanced Flight Model
             +tooltip(`Enforce a Flight Model for the Server's clients`)
@@ -242,6 +246,10 @@
       persistent: {
         get() { return this.$store.state.config.persistent; },
         set(v) { this.$store.commit('UPDATE_CONFIG', ['persistent', v]); }
+      },
+      init: {
+        get() { return this.$store.state.params.autoInit; },
+        set(v) { this.$store.commit('UPDATE_PARAMS', ['autoInit', v]); }
       },
       drawing: {
         get() { return this.$store.state.config.drawingInMap; },

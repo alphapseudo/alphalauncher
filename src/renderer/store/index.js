@@ -77,6 +77,16 @@ export default new Vuex.Store({
       context.dispatch('REFRESH_MISSIONS');
       context.dispatch('REFRESH_MODS');
       return true;
+    },
+    async WRITE_ERROR({ state: store }, error) {
+      const { app: { appLocation: path } } = store;
+      System.writeErrorLog(path, error);
+    },
+    async LAUNCH_SERVER({ state: store }) {
+      await Template.saveTemplates(store);
+      const { app: { appLocation: path } } = store;
+      const params = Profile.getParams(store);
+      return System.launchServer(path, params);
     }
   },
   strict: process.env.NODE_ENV !== 'production',

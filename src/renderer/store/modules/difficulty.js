@@ -37,7 +37,7 @@ const mutations = {
     state = _.set(state, path, value);
   },
   RESET_DIFFICULTY(state) {
-    _.merge(state, defaults);
+    _.extend(state, defaults);
   }
 };
 
