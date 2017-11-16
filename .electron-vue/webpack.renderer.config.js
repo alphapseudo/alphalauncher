@@ -113,9 +113,6 @@ let rendererConfig = {
       _: 'lodash',
       $: 'jquery'
     }),
-    new webpack.DefinePlugin({
-      APP_VERSION: JSON.stringify(require("../package.json").version)
-    }),
     new ExtractTextPlugin('styles.css'),
     new HtmlWebpackPlugin({
       filename: 'index.html',

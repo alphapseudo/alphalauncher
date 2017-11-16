@@ -21,7 +21,7 @@ function createWindow() {
     height: 563,
     useContentSize: true,
     frame: false,
-    width: 905,
+    width: 910,
     backgroundColor: '#29323c'
   });
 

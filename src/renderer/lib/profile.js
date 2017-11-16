@@ -44,13 +44,17 @@ class Profile {
         reduced.push(formatted);
       }
       return reduced;
-    }, []).join(' ');
+    }, []);
   }
 
   static formatConfig(profile) {
     const profiles = Path.normalize(`AlphaLauncher/${profile}`);
     const serverCfg = Path.join(profiles, `${profile}.cfg`);
-    return `"-config=${serverCfg}" "-profiles=${profiles}" -name=${profile}"`;
+    return [
+      `-config=${serverCfg}`,
+      `-profiles=${profiles}`,
+      `-name=${profile}`
+    ];
   }
 
   static formatMods(mods) {
@@ -61,10 +65,10 @@ class Profile {
         reduced.push(path);
         return reduced;
       }, []).join(';');
-      return `"-mod=${formatted}"`;
+      return [`-mod=${formatted}`];
     }
 
-    return '';
+    return [];
   }
 
   static getParams(store) {
@@ -72,7 +76,8 @@ class Profile {
     const serverParams = Profile.formatParams(params);
     const configParams = Profile.formatConfig(profile);
     const modParams = Profile.formatMods(mods.available);
-    return `${serverParams} ${configParams} ${modParams}`;
+
+    return _.concat(serverParams, configParams, modParams);
   }
 }
 

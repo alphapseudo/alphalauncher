@@ -1,10 +1,13 @@
 import Registry from 'winreg';
 import Path from 'path';
+import { mkdirp } from 'mkdirp';
+import ChildProcess from 'child_process';
 import { promisifyAll, promisify } from 'bluebird';
-import { access, constants as permissions } from 'fs';
+import { access, constants as permissions, writeFile } from 'fs';
 import Constants from '../constants';
 
 const checkFile = promisify(access);
+const writeToFile = promisify(writeFile);
 
 const {
   APP_ID,
@@ -53,19 +56,18 @@ class System {
     }
   }
 
-  // async getExecutable() {
-  //   if (!this.executable) {
-  //     try {
-  //       const executable = Path.normalize(`${this.appPath}/${this.execName}`);
-  //       await checkFile(executable, permissions.F_OK);
-  //       this.executable = executable;
-  //     } catch (e) {
-  //       this.executable = false;
-  //     }
-  //   }
+  static async writeErrorLog(base, error) {
+    const launcherBase = Path.join(base, 'AlphaLauncher');
+    await mkdirp(launcherBase);
+    return writeToFile(Path.join(launcherBase, 'launch-debug.log'), error.message, 'utf8');
+  }
 
-  //   return this.executable;
-  // }
+  static launchServer(path, params) {
+    return ChildProcess.spawn(`${System.getExeName()}`, params, {
+      cwd: path,
+      detached: true
+    });
+  }
 }
 
 export default System;

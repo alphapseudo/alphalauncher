@@ -4,7 +4,10 @@
       template(v-if="!isLoading")
         .columns.is-mobile
             .column.is-one-third.navigation
-              h3.title.is-3 AlphaLauncher
+              h3.title.brand
+                span
+                  img(:src="logo")
+                | AlphaLauncher
               p.subtitle.version v{{ version }}
               aside.menu
                 .menu-label Configuration
@@ -38,6 +41,7 @@
                   a.button.is-warning.is-medium.is-outlined.is-fullwidth(
                     :disabled="!appPath"
                     @click="launch"
+                    :class="{'is-loading': isRunning}"
                   ) LAUNCH
                 .sub-controls.field.has-addons.is-pulled-right
                   p.control
@@ -98,12 +102,14 @@
     name: 'AlphaLauncher',
     data() {
       return {
-        isLoading: true
+        isLoading: true,
+        isRunning: false,
+        logo: 'static/images/alpha.png'
       };
     },
     computed: {
       appPath() { return this.$store.state.app.appLocation; },
-      version() { return this.$store.state.app.version; },
+      version() { return remote.app.getVersion(); },
       profile() { return this.$store.state.profile; }
     },
     async mounted() {
@@ -138,7 +144,20 @@
         }
       },
       async launch() {
-        await this.$store.dispatch('GENERATE_CONFIG');
+        this.isRunning = true;
+
+        try {
+          const app = await this.$store.dispatch('LAUNCH_SERVER');
+          app.on('close', (code) => {
+            if (code >= 1) {
+              this.$toasted.error('Server Exited Unexpectedly');
+            }
+            this.isRunning = false;
+          });
+        } catch (e) {
+          this.$toasted.error('Couldn\'t Launch Server. Please Try Again');
+          this.isRunning = false;
+        }
       },
       reset() {
         if (!this.appPath) return;
@@ -203,6 +222,17 @@
     a, .configuration { -webkit-app-region: no-drag }
   }
 
+  // Brand
+  .brand {
+    display: flex;
+    align-items: center;
+    font-size: 1.9rem !important;
+    img {
+      width: 48px;
+      margin-right: 10px;
+    }
+  }
+
   // Spinners
   .spinner {
     display: flex;
@@ -225,7 +255,8 @@
     -webkit-border-radius: 100px;
     &:active {
       background: rgba(180,180,180,0.61);
-    -webkit-border-radius: 100px;
+      -webkit-border-radius: 100px;
+      border-radius: 100px;
     }
   }
 
