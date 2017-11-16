@@ -35,7 +35,7 @@ admins[] = {
   {{~#each admins~}}
     "{{ this }}"{{#unless @last}},{{/unless}}
   {{~/each~}}
-}
+};
 
 {{/if~}}
 
@@ -46,7 +46,7 @@ headlessClients[] = {
   {{~#each headlessClients~}}
     "{{ this }}"{{#unless @last}},{{/unless}}
   {{~/each~}}
-}
+};
 
 {{/if~}}
 
@@ -57,7 +57,7 @@ localClient[] = {
   {{~#each localClient~}}
     "{{ this }}"{{#unless @last}},{{/unless}}
   {{~/each~}}
-}
+};
 
 {{/if~}}
 
@@ -106,13 +106,13 @@ onHackedData = "{{ onHackedData }}";
 onDifferentData = "{{ onDifferentData }}";
 
 // MISCELLANEOUS
-drawingInMap = {{ boolToInt drawingInMap }}
-forceRotorLibSimulation = {{ forceRotorLibSimulation }}
+drawingInMap = {{ boolToInt drawingInMap }};
+forceRotorLibSimulation = {{ forceRotorLibSimulation }};
 
 // MISSION ROTATION
 class Missions { {{~#enabledEach missions}}
   class Mission{{ increment this.index }} {
-    template = "{{ this.name }}";
+    template = "{{ this.name }}.{{ this.level }}";
     difficulty = "{{ this.difficulty }}";
   };
 {{/enabledEach~}} };
