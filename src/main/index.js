@@ -22,6 +22,7 @@ function createWindow() {
     useContentSize: true,
     frame: false,
     width: 910,
+    maximizable: false,
     backgroundColor: '#29323c'
   });
 

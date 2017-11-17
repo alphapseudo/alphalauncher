@@ -15,7 +15,7 @@ class Profile {
 
   static async getProfilePath(base, profile) {
     const path = Path.normalize(`${base}/AlphaLauncher/${profile}`);
-    await mkdirp(path);
+    await mkdirp(Path.join(path, 'Users', profile));
     return path;
   }
 
@@ -48,11 +48,11 @@ class Profile {
   }
 
   static formatConfig(profile) {
-    const profiles = Path.normalize(`AlphaLauncher/${profile}`);
-    const serverCfg = Path.join(profiles, `${profile}.cfg`);
+    const base = Path.join('AlphaLauncher', profile);
+    const serverCfg = Path.join(base, `${profile}.cfg`);
     return [
       `-config=${serverCfg}`,
-      `-profiles=${profiles}`,
+      `-profiles=${base}`,
       `-name=${profile}`
     ];
   }

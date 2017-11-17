@@ -58,7 +58,7 @@ class Template {
     const profile = await Template.generateProfile(path, difficulty);
     const configuration = await Template.generateConfig(path, config, missions);
 
-    await fs.writeFileAsync(Path.join(path, `${name}.Arma3Profile`), profile);
+    await fs.writeFileAsync(Path.join(path, 'Users', name, `${name}.Arma3Profile`), profile);
     await fs.writeFileAsync(Path.join(path, `${name}.cfg`), configuration);
   }
 }
