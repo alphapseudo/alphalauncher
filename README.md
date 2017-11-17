@@ -1,5 +1,4 @@
-# AlphaLauncher
-
+![](static/images/logo.png?raw)
 > A simple but powerful Arma III dedicated server tool.
 
 ⚠️ Currently under active development
