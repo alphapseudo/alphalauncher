@@ -44,7 +44,7 @@
       draggable.table-list(v-model="missions" :options="options" element="tbody")
         tr(
           v-for="(mission, index) in missions"
-          :key="mission.name"
+          :key="mission.name + mission.level"
           :class="{isHidden: missesSearch(mission.name)}"
         )
           td
