@@ -64,7 +64,7 @@
     "bulma-switch": "^0.0.4",
     "electron-json-storage": "^4.0.2",
     "font-awesome": "^4.7.0",
-    "handlebars": "^4.0.11",
+    "handlebars": "^4.5.3",
     "jquery": "^3.2.1",
     "lodash": "^4.17.4",
     "mkdirp": "^0.5.1",
