@@ -4,7 +4,7 @@
 ![](static/images/launcher.png?raw)
 ⚠️ Currently under active development
 
-#### Build Setup
+## Development
 
 ``` bash
 # install dependencies

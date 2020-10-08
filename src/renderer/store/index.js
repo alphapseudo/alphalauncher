@@ -1,26 +1,47 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import Storage from 'electron-json-storage';
+import Crypto from 'crypto';
 import { promisifyAll } from 'bluebird';
 
 import Template from '../lib/template';
 import Application from '../lib/application';
 import Profile from '../lib/profile';
 import System from '../lib/system';
+
 import modules from './modules';
 
 Vue.use(Vuex);
 
 promisifyAll(Storage);
 
+function hashObject(state) {
+  const hash = Crypto.createHash('sha1');
+  return hash.update(JSON.stringify(state)).digest('hex');
+}
+
 export default new Vuex.Store({
   state: {
-    profile: 'Default'
+    profile: 'Default',
+    saved: null
   },
   modules,
   mutations: {
     MERGE_STATE(current, incoming) {
       current = _.merge(current, incoming);
+    },
+    CACHE_CONFIG(state, config) {
+      state.saved = hashObject(config);
+    }
+  },
+  getters: {
+    snapshot: (state) => {
+      const store = _.merge({}, state);
+      delete store.saved;
+      delete store.app.isRunning;
+      store.mods.available = store.mods.available.filter(mod => mod.enabled);
+      store.missions.available = store.missions.available.filter(mission => mission.enabled);
+      return store;
     }
   },
   actions: {
@@ -33,12 +54,16 @@ export default new Vuex.Store({
       context.commit('MERGE_STATE', store);
       await context.dispatch('REFRESH_MISSIONS');
       await context.dispatch('REFRESH_MODS');
+      context.commit('CACHE_CONFIG', context.getters.snapshot);
     },
-    async SAVE_PROFILE({ state }) {
-      const store = _.merge({}, state);
-      const currentProfile = store.profile;
-      delete store.profile;
-      await Profile.saveProfileStore(currentProfile, store);
+    async SAVE_PROFILE({ getters: { snapshot }, ...context }) {
+      await Profile.saveProfileStore(snapshot.profile, snapshot);
+      context.commit('CACHE_CONFIG', snapshot);
+    },
+    async CHECK_FOR_CHANGES({ state: { saved }, getters }) {
+      const { snapshot } = getters;
+      const hashed = hashObject(snapshot);
+      return saved !== hashed;
     },
     async GENERATE_CONFIG({ state: store }) {
       await Template.saveTemplates(store);
