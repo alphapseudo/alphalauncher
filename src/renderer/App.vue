@@ -131,7 +131,24 @@
       minimize() {
         remote.BrowserWindow.getFocusedWindow().minimize();
       },
-      close() {
+      async close() {
+        const changesDetected = await this.$store.dispatch('CHECK_FOR_CHANGES');
+
+        if (changesDetected) {
+          const answer = remote.dialog.showMessageBox(
+            remote.getCurrentWindow(), {
+              type: 'warning',
+              buttons: ['Save', 'Don\'t Save', 'Cancel'],
+              title: 'AlphaLauncher',
+              message: `Changes were made to the profile '${this.profile}'. Save changes?`
+            }
+          );
+
+          if (answer === 0) {
+            await this.$store.dispatch('SAVE_PROFILE');
+          }
+          if (answer === 2) return;
+        }
         remote.BrowserWindow.getFocusedWindow().close();
       },
       async save() {
