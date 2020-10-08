@@ -1,6 +1,7 @@
 ![](static/images/logo.png?raw)
 > A simple but powerful Arma III dedicated server tool.
 
+![](static/images/launcher.png?raw)
 ⚠️ Currently under active development
 
 #### Build Setup
