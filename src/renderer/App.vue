@@ -108,6 +108,7 @@
               @click="manageProfiles" 
               aria-haspopup='true'
               aria-controls='dropdown-menu'
+              title="Profile Management"
             )
               span.icon
                 i.fa.fa-user
@@ -129,11 +130,11 @@
                   i.fa.fa-user-plus
                 |  Create New Profile
       p.control
-        a.button.is-transparent(@click="minimize")
+        a.button.is-transparent(@click="minimize" title="Minimize")
           span.icon
             i.fa.fa-minus
       p.control
-        a.button.is-transparent.is-danger(@click="close")
+        a.button.is-transparent.is-danger(@click="close" title="Close")
           span.icon
             i.fa.fa-close
 </template>
