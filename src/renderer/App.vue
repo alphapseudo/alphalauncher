@@ -223,7 +223,7 @@
               type: 'warning',
               buttons: ['Save', 'Don\'t Save', 'Cancel'],
               title: 'AlphaLauncher',
-              message: `Changes were made to the profile '${this.profile}'. Save changes?`
+              message: `Changes were made to the profile '${this.active}'. Save changes?`
             }
           );
 
