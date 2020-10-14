@@ -326,7 +326,7 @@
   body {
     -webkit-app-region: drag;
     -webkit-user-select: none;
-    a, .modal, .configuration { -webkit-app-region: no-drag }
+    a, .modal, .navigation, .configuration { -webkit-app-region: no-drag }
   }
 
   // Brand
