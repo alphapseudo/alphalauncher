@@ -104,7 +104,9 @@
                 | Other dropdown item
               hr.dropdown-divider
               a.dropdown-item(href='#')
-                | Create a Profile
+                span.icon
+                  i.fa.fa-user-plus
+                |  Create New Profile
       p.control
         a.button.is-transparent(@click="minimize")
           span.icon
