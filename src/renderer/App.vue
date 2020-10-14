@@ -15,6 +15,7 @@
                 placeholder="Profile Name (e.g. Primary)" 
                 v-model.lazy="newProfile" 
                 :class="{'is-danger': isDuplicateProfile}"
+                @keyup.enter="createNewProfile"
               )
               p.help.is-danger(v-if="isDuplicateProfile")
                 | Profile already exists - please choose another name
