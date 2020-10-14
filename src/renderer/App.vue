@@ -1,5 +1,5 @@
 <template lang="pug">
-  section.section#app
+  section.section#app(@click="blur")
     transition(name="fade" mode="out-in" appear)
       template(v-if="!isLoading")
         .columns.is-mobile
@@ -80,10 +80,31 @@
       )
     .fixed-controls.field.has-addons
       p.control(v-if="!isLoading")
-        a.button.is-transparent
-          span.icon
-            i.fa.fa-user
-          span {{ profile }}
+        a.dropdown.is-right(ref="profiles" :class="{'is-active': isChangingProfiles}")
+          .dropdown-trigger
+            button.button.is-transparent(
+              @click="profiles" 
+              aria-haspopup='true'
+              aria-controls='dropdown-menu'
+            )
+              span.icon
+                i.fa.fa-user
+              span {{ profile }}
+              span.icon.is-small
+                i.fa.fa-angle-down(aria-hidden='true')
+          #dropdown-menu.dropdown-menu(role='menu')
+            .dropdown-content
+              a.dropdown-item(href='#')
+                | Dropdown item
+              a.dropdown-item
+                | Other dropdown item
+              a.dropdown-item.is-active(href='#')
+                | Active dropdown item
+              a.dropdown-item(href='#')
+                | Other dropdown item
+              hr.dropdown-divider
+              a.dropdown-item(href='#')
+                | Create a Profile
       p.control
         a.button.is-transparent(@click="minimize")
           span.icon
@@ -104,6 +125,7 @@
       return {
         isLoading: true,
         isRunning: false,
+        isChangingProfiles: false,
         logo: 'static/images/alpha.png'
       };
     },
@@ -130,6 +152,15 @@
       },
       minimize() {
         remote.BrowserWindow.getFocusedWindow().minimize();
+      },
+      blur(event) {
+        const dropdown = this.$refs.profiles;
+        if (!dropdown.contains(event.target)) {
+          this.isChangingProfiles = false;
+        }
+      },
+      profiles() {
+        this.isChangingProfiles = !this.isChangingProfiles;
       },
       async close() {
         const changesDetected = await this.$store.dispatch('CHECK_FOR_CHANGES');
@@ -224,6 +255,8 @@
   $table-striped-row-even-background-color: $grey-dark;
 
   $label-color: $white-ter;
+
+  $scheme-main: $black-ter;
 
   $check-green: #2fff78;
 
@@ -458,6 +491,23 @@
     &.is-active { color: $yellow }
   }
 
+  // Dropdown
+  .dropdown {
+    button:focus {
+      color: $white;
+    }
+
+    .dropdown-item {
+      &:hover {
+        color: #fafafa;
+      }
+    }
+
+    .dropdown-content {
+      border: 1px solid $grey-light;
+    }
+  }
+
   .sub-controls {
     margin-bottom: -1.4em;
     a { padding: 0.75em 0.5em }
@@ -467,6 +517,7 @@
     position: fixed;
     top: 0;
     right: 0.1em;
+    z-index: 10;
   }
 
   @import "~bulma";
