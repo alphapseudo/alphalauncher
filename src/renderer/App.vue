@@ -1,5 +1,16 @@
 <template lang="pug">
   section.section#app(@click="blur")
+    .modal(:class="{'is-active': showProfileModal}")
+      .modal-background(@click="closeProfileModal")
+      .modal-card
+        header.modal-card-head
+          p.modal-card-title Enter Profile Name
+          button.delete(@click="closeProfileModal" aria-label='close')
+        section.modal-card-body
+            input.input.is-small(ref="profileInput" type="text" maxlength="255" placeholder="Profile Name (e.g. Primary)" v-model.lazy="newProfile")
+        footer.modal-card-foot
+          button.button.is-success(@click="console.log('test')") Create
+          button.button.is-light(@click="closeProfileModal") Cancel
     transition(name="fade" mode="out-in" appear)
       template(v-if="!isLoading")
         .columns.is-mobile
@@ -83,27 +94,26 @@
         a.dropdown.is-right(ref="profiles" :class="{'is-active': isChangingProfiles}")
           .dropdown-trigger
             button.button.is-transparent(
-              @click="profiles" 
+              @click="manageProfiles" 
               aria-haspopup='true'
               aria-controls='dropdown-menu'
             )
               span.icon
                 i.fa.fa-user
-              span {{ profile }}
+              span {{ active }}
               span.icon.is-small
                 i.fa.fa-angle-down(aria-hidden='true')
           #dropdown-menu.dropdown-menu(role='menu')
             .dropdown-content
-              a.dropdown-item(href='#')
-                | Dropdown item
-              a.dropdown-item
-                | Other dropdown item
-              a.dropdown-item.is-active(href='#')
-                | Active dropdown item
-              a.dropdown-item(href='#')
-                | Other dropdown item
+              a.dropdown-item(
+                v-for="name in profiles"
+                :class="{'is-active': active === name}"
+                :key="name"
+                @click="changeProfile(name)"
+              )
+                | {{ name }}
               hr.dropdown-divider
-              a.dropdown-item(href='#')
+              a.dropdown-item(@click="openProfileModal")
                 span.icon
                   i.fa.fa-user-plus
                 |  Create New Profile
@@ -128,13 +138,16 @@
         isLoading: true,
         isRunning: false,
         isChangingProfiles: false,
+        showProfileModal: false,
+        newProfile: '',
         logo: 'static/images/alpha.png'
       };
     },
     computed: {
       appPath() { return this.$store.state.app.appLocation; },
       version() { return remote.app.getVersion(); },
-      profile() { return this.$store.state.profile; }
+      active() { return this.$store.state.profile; },
+      profiles() { return this.$store.state.profiles; }
     },
     async mounted() {
       await this.$store.dispatch('INITIALIZE_LAUNCHER');
@@ -161,8 +174,25 @@
           this.isChangingProfiles = false;
         }
       },
-      profiles() {
+      manageProfiles() {
         this.isChangingProfiles = !this.isChangingProfiles;
+      },
+      changeProfile(profile) {
+        if (profile === this.active) {
+          return;
+        }
+        // TODO change profile
+      },
+      openProfileModal() {
+        this.showProfileModal = true;
+        this.isChangingProfiles = false;
+        this.$nextTick(() => {
+          this.$refs.profileInput.focus();
+        });
+      },
+      closeProfileModal() {
+        this.showProfileModal = false;
+        this.newProfile = '';
       },
       async close() {
         const changesDetected = await this.$store.dispatch('CHECK_FOR_CHANGES');
@@ -251,6 +281,13 @@
   $menu-item-color: $white;
   $menu-item-active-color: $black;
   $menu-item-active-background-color: $white-bis;
+
+  $modal-card-head-padding: 12px;
+  $modal-card-title-size: 1.4rem;
+  $modal-card-head-background-color: #3a4652;
+  $modal-card-body-background-color: #3a4652;
+  $modal-card-foot-border-top: 0;
+  $modal-card-head-border-bottom: 0;
 
   $table-color: $white;
   $table-background-color: $black-ter;

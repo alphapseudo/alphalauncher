@@ -23,6 +23,7 @@ function hashObject(state) {
 export default new Vuex.Store({
   state: {
     profile: 'Default',
+    profiles: [],
     saved: null
   },
   modules,
@@ -32,6 +33,9 @@ export default new Vuex.Store({
     },
     CACHE_CONFIG(state, config) {
       state.saved = hashObject(config);
+    },
+    UPDATE_PROFILES(state, profiles) {
+      state.profiles = profiles;
     }
   },
   getters: {
@@ -46,8 +50,11 @@ export default new Vuex.Store({
   },
   actions: {
     async INITIALIZE_LAUNCHER(context) {
-      const profile = await Profile.getActiveProfile();
-      await context.dispatch('LOAD_PROFILE', profile);
+      const profiles = await Profile.loadProfiles();
+      context.commit('UPDATE_PROFILES', profiles);
+
+      const active = await Profile.getActiveProfile();
+      await context.dispatch('LOAD_PROFILE', active);
     },
     async LOAD_PROFILE(context, name) {
       const store = await Profile.loadProfile(name);

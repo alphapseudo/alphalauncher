@@ -6,10 +6,16 @@ import System from './system';
 
 promisifyAll(Storage);
 
+const DEFAULT_PROFILES = {
+  active: 'Default',
+  storage: {}
+};
+
+let profiles = {};
+
 class Profile {
   static async getActiveProfile() {
-    const store = await Storage.getAsync('app');
-    const active = store.active || 'Default';
+    const { active } = profiles;
     return active;
   }
 
@@ -17,6 +23,12 @@ class Profile {
     const path = Path.normalize(`${base}/AlphaLauncher/${profile}`);
     await mkdirp(Path.join(path, 'Users', profile));
     return path;
+  }
+
+  static async loadProfiles() {
+    profiles = await Storage.getAsync('profiles') || DEFAULT_PROFILES;
+    const { storage: available } = profiles;
+    return Object.keys(available).sort();
   }
 
   static async loadProfile(name = 'Default') {
