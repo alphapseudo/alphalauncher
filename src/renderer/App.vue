@@ -182,6 +182,7 @@
           return;
         }
         // TODO change profile
+        console.log(profile);
       },
       openProfileModal() {
         this.showProfileModal = true;
@@ -308,7 +309,7 @@
   body {
     -webkit-app-region: drag;
     -webkit-user-select: none;
-    a, .configuration { -webkit-app-region: no-drag }
+    a, .modal, .configuration { -webkit-app-region: no-drag }
   }
 
   // Brand
