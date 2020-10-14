@@ -7,9 +7,19 @@
           p.modal-card-title Enter Profile Name
           button.delete(@click="closeProfileModal" aria-label='close')
         section.modal-card-body
-            input.input.is-small(ref="profileInput" type="text" maxlength="255" placeholder="Profile Name (e.g. Primary)" v-model.lazy="newProfile")
+            .field
+              input.input.is-small(
+                ref="profileInput" 
+                type="text" 
+                maxlength="255" 
+                placeholder="Profile Name (e.g. Primary)" 
+                v-model.lazy="newProfile" 
+                :class="{'is-danger': isDuplicateProfile}"
+              )
+              p.help.is-danger(v-if="isDuplicateProfile")
+                | Profile already exists - please choose another name
         footer.modal-card-foot
-          button.button.is-success(@click="console.log('test')") Create
+          button.button.is-success(@click="createNewProfile") Create
           button.button.is-light(@click="closeProfileModal") Cancel
     transition(name="fade" mode="out-in" appear)
       template(v-if="!isLoading")
@@ -147,7 +157,10 @@
       appPath() { return this.$store.state.app.appLocation; },
       version() { return remote.app.getVersion(); },
       active() { return this.$store.state.profile; },
-      profiles() { return this.$store.state.profiles; }
+      profiles() { return this.$store.state.profiles; },
+      isDuplicateProfile() {
+        return this.$store.state.profiles.some(p => p.toLowerCase() === this.newProfile.toLowerCase());
+      }
     },
     async mounted() {
       await this.$store.dispatch('INITIALIZE_LAUNCHER');
@@ -194,6 +207,10 @@
       closeProfileModal() {
         this.showProfileModal = false;
         this.newProfile = '';
+      },
+      createNewProfile() {
+        if (this.isDuplicateProfile) return;
+        this.showProfileModal = false;
       },
       async close() {
         const changesDetected = await this.$store.dispatch('CHECK_FOR_CHANGES');

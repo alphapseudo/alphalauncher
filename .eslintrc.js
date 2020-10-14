@@ -19,6 +19,7 @@ module.exports = {
   ],
   'rules': {
     'global-require': 0,
+    'max-len': 0,
     'import/no-unresolved': 0,
     'no-param-reassign': 0,
     'no-shadow': 0,
