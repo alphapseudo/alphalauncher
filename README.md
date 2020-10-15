@@ -4,7 +4,6 @@
 
 ![](static/images/launcher.png?raw)
 
-⚠️ Currently under active development
 
 ## Development
 
