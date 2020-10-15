@@ -51,7 +51,7 @@ class Template {
       difficulty,
       config,
       missions: { available: missions },
-      profile: name
+      user: { active: name }
     } = store;
 
     const path = await Profile.getProfilePath(appLocation, name);

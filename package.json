@@ -1,6 +1,6 @@
 {
   "name": "alphalauncher",
-  "version": "0.1.2",
+  "version": "1.0.0",
   "author": "Andrew Fake <afake518@gmail.com>",
   "description": "A simple but powerful Arma III dedicated server tool.",
   "license": "GPL-3.0",
@@ -22,7 +22,7 @@
   },
   "build": {
     "productName": "Alpha Launcher",
-    "appId": "org.simulatedgreg.electron-vue",
+    "appId": "com.github.alphapseudo.alphalauncher",
     "directories": {
       "output": "build"
     },
