@@ -106,7 +106,7 @@ class Profile {
   }
 
   static getParams(store) {
-    const { params, profile, mods } = store;
+    const { params, user: { active: profile }, mods } = store;
     const serverParams = Profile.formatParams(params);
     const configParams = Profile.formatConfig(profile);
     const modParams = Profile.formatMods(mods.available);
