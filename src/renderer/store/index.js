@@ -31,7 +31,13 @@ export default new Vuex.Store({
   modules,
   mutations: {
     MERGE_STATE(current, incoming) {
-      current = _.merge(current, incoming);
+      current = _.mergeWith(current, incoming, (obj, src) => {
+        if (_.isArray(obj)) {
+          return src;
+        }
+
+        return undefined;
+      });
     },
     SET_ACTIVE_PROFILE(state, profile) {
       state.user.active = profile;

@@ -8,7 +8,7 @@ promisifyAll(Storage);
 
 const DEFAULT_PROFILES = {
   active: 'Default',
-  storage: {}
+  storage: { Default: {} }
 };
 
 let profiles = {};
