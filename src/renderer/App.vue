@@ -13,7 +13,7 @@
                 type="text" 
                 maxlength="255" 
                 placeholder="Profile Name (e.g. Primary)" 
-                v-model.lazy="newProfile" 
+                v-model.lazy="inputProfile" 
                 :class="{'is-danger': isDuplicateProfile}"
                 @keyup.enter="createNewProfile"
               )
@@ -152,7 +152,7 @@
         isRunning: false,
         isChangingProfiles: false,
         showProfileModal: false,
-        newProfile: '',
+        inputProfile: '',
         logo: 'static/images/alpha.png'
       };
     },
@@ -162,7 +162,7 @@
       active() { return this.$store.state.user.active; },
       profiles() { return this.$store.state.user.profiles; },
       isDuplicateProfile() {
-        return this.$store.state.user.profiles.some(p => p.toLowerCase() === this.newProfile.toLowerCase());
+        return this.$store.state.user.profiles.some(p => p.toLowerCase() === this.inputProfile.toLowerCase());
       }
     },
     async mounted() {
@@ -220,7 +220,7 @@
       },
       closeProfileModal() {
         this.showProfileModal = false;
-        this.newProfile = '';
+        this.inputProfile = '';
       },
       async createNewProfile() {
         if (this.isDuplicateProfile) return;
@@ -234,7 +234,7 @@
         if (result === 2) return;
 
         try {
-          await this.$store.dispatch('CREATE_PROFILE', this.newProfile);
+          await this.$store.dispatch('CREATE_PROFILE', this.inputProfile);
           this.$toasted.success('Profile Created Successfully');
         } catch (e) {
           this.$toasted.error(e);
