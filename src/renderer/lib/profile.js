@@ -26,7 +26,7 @@ class Profile {
 
   static getAvailableProfiles() {
     const { storage: available } = profiles;
-    return Object.keys(available).sort();
+    return Object.keys(available);
   }
 
   static async getProfilePath(base, profile) {
@@ -49,6 +49,12 @@ class Profile {
 
   static async setActiveProfile(name) {
     profiles.active = name;
+    await this.persist();
+    return true;
+  }
+
+  static async deleteProfile(name) {
+    delete profiles.storage[name];
     await this.persist();
     return true;
   }

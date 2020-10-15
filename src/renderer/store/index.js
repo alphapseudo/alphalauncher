@@ -95,6 +95,15 @@ export default new Vuex.Store({
       await Profile.saveProfile(context.state.user.active, snapshot);
       context.commit('CACHE_CONFIG', snapshot);
     },
+    async DELETE_PROFILE({ state: { user: { active } }, ...context }, name) {
+      await Profile.deleteProfile(name);
+
+      if (active === name) {
+        await context.dispatch('LOAD_PROFILE', 'Default');
+      }
+
+      await context.dispatch('REFRESH_PROFILES');
+    },
     async CHECK_FOR_CHANGES({ state: { user: { saved } }, getters }) {
       const { snapshot } = getters;
       const hashed = hashObject(snapshot);
