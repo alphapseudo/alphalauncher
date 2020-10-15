@@ -48,6 +48,7 @@
       "icon": "build/icons/icon.icns"
     },
     "win": {
+      "artifactName": "${productName}.${ext}",
       "icon": "build/icons/alpha.ico",
       "target": "portable"
     },
