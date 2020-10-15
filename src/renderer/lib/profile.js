@@ -15,7 +15,8 @@ let profiles = {};
 
 class Profile {
   static async loadProfiles() {
-    profiles = await Storage.getAsync('profiles') || DEFAULT_PROFILES;
+    const loaded = await Storage.getAsync('profiles');
+    profiles = _.merge(DEFAULT_PROFILES, loaded);
   }
 
   static getActiveProfile() {
