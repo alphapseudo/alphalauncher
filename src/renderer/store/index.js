@@ -22,27 +22,32 @@ function hashObject(state) {
 
 export default new Vuex.Store({
   state: {
-    profile: 'Default',
-    profiles: [],
-    saved: null
+    user: {
+      active: 'Default',
+      profiles: [],
+      saved: null
+    }
   },
   modules,
   mutations: {
     MERGE_STATE(current, incoming) {
       current = _.merge(current, incoming);
     },
+    SET_ACTIVE(state, profile) {
+      state.user.active = profile;
+    },
     CACHE_CONFIG(state, config) {
-      state.saved = hashObject(config);
+      state.user.saved = hashObject(config);
     },
     UPDATE_PROFILES(state, profiles) {
-      state.profiles = profiles;
+      state.user.profiles = profiles;
     }
   },
   getters: {
     snapshot: (state) => {
       const store = _.merge({}, state);
-      delete store.saved;
       delete store.app.isRunning;
+      delete store.user;
       store.mods.available = store.mods.available.filter(mod => mod.enabled);
       store.missions.available = store.missions.available.filter(mission => mission.enabled);
       return store;
@@ -50,24 +55,34 @@ export default new Vuex.Store({
   },
   actions: {
     async INITIALIZE_LAUNCHER(context) {
-      const profiles = await Profile.loadProfiles();
-      context.commit('UPDATE_PROFILES', profiles);
-
+      await Profile.loadProfiles();
       const active = await Profile.getActiveProfile();
+      await context.dispatch('REFRESH_PROFILES');
       await context.dispatch('LOAD_PROFILE', active);
     },
+    async REFRESH_PROFILES(context) {
+      const profiles = await Profile.getAvailableProfiles();
+      context.commit('UPDATE_PROFILES', profiles);
+    },
+    async CREATE_PROFILE({ getters: { snapshot }, ...context }, profile) {
+      await Profile.saveProfile(profile, snapshot);
+      await context.dispatch('REFRESH_PROFILES');
+      context.commit('SET_ACTIVE', profile);
+      context.commit('CACHE_CONFIG', snapshot);
+    },
     async LOAD_PROFILE(context, name) {
-      const store = await Profile.loadProfile(name);
+      const store = await Profile.getProfile(name);
       context.commit('MERGE_STATE', store);
+      await context.commit('SET_ACTIVE', name);
       await context.dispatch('REFRESH_MISSIONS');
       await context.dispatch('REFRESH_MODS');
       context.commit('CACHE_CONFIG', context.getters.snapshot);
     },
     async SAVE_PROFILE({ getters: { snapshot }, ...context }) {
-      await Profile.saveProfileStore(snapshot.profile, snapshot);
+      await Profile.saveProfile(context.state.user.active, snapshot);
       context.commit('CACHE_CONFIG', snapshot);
     },
-    async CHECK_FOR_CHANGES({ state: { saved }, getters }) {
+    async CHECK_FOR_CHANGES({ state: { user: { saved } }, getters }) {
       const { snapshot } = getters;
       const hashed = hashObject(snapshot);
       return saved !== hashed;

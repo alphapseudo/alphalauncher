@@ -19,32 +19,37 @@ class Profile {
     return active;
   }
 
+  static async getAvailableProfiles() {
+    const { storage: available } = profiles;
+    return Object.keys(available).sort();
+  }
+
   static async getProfilePath(base, profile) {
     const path = Path.normalize(`${base}/AlphaLauncher/${profile}`);
     await mkdirp(Path.join(path, 'Users', profile));
     return path;
   }
 
-  static async loadProfiles() {
-    profiles = await Storage.getAsync('profiles') || DEFAULT_PROFILES;
-    const { storage: available } = profiles;
-    return Object.keys(available).sort();
-  }
-
-  static async loadProfile(name = 'Default') {
-    const store = await Storage.getAsync(`profile_${name}`);
-    let appPath = _.get(store, 'app.appLocation', null);
+  static async getProfile(name = 'Default') {
+    const state = _.get(profiles, `storage.${name}`, {});
+    let appPath = _.get(state, 'app.appLocation', null);
 
     if (!appPath) {
       appPath = await System.getSteamAppPath();
-      _.set(store, 'app.appLocation', appPath);
+      _.set(state, 'app.appLocation', appPath);
     }
 
-    return store;
+    return state;
   }
 
-  static async saveProfileStore(name, store) {
-    await Storage.setAsync(`profile_${name}`, store);
+  static async loadProfiles() {
+    profiles = await Storage.getAsync('profiles') || DEFAULT_PROFILES;
+  }
+
+  static async saveProfile(name, state) {
+    profiles.storage[name] = state;
+    profiles.active = name;
+    await Storage.setAsync('profiles', profiles);
     return true;
   }
 

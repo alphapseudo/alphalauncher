@@ -158,10 +158,10 @@
     computed: {
       appPath() { return this.$store.state.app.appLocation; },
       version() { return remote.app.getVersion(); },
-      active() { return this.$store.state.profile; },
-      profiles() { return this.$store.state.profiles; },
+      active() { return this.$store.state.user.active; },
+      profiles() { return this.$store.state.user.profiles; },
       isDuplicateProfile() {
-        return this.$store.state.profiles.some(p => p.toLowerCase() === this.newProfile.toLowerCase());
+        return this.$store.state.user.profiles.some(p => p.toLowerCase() === this.newProfile.toLowerCase());
       }
     },
     async mounted() {
@@ -192,12 +192,23 @@
       manageProfiles() {
         this.isChangingProfiles = !this.isChangingProfiles;
       },
-      changeProfile(profile) {
+      async changeProfile(profile) {
         if (profile === this.active) {
           return;
         }
-        // TODO change profile
-        console.log(profile);
+
+        this.isChangingProfiles = false;
+
+        const result = await this.checkForChanges();
+
+        if (result === 0) {
+          await this.$store.dispatch('SAVE_PROFILE');
+        }
+
+        if (result === 2) return;
+
+        await this.$store.dispatch('LOAD_PROFILE', profile);
+        this.$toasted.success('Successfully Changed Profile');
       },
       openProfileModal() {
         this.showProfileModal = true;
@@ -210,11 +221,27 @@
         this.showProfileModal = false;
         this.newProfile = '';
       },
-      createNewProfile() {
+      async createNewProfile() {
         if (this.isDuplicateProfile) return;
+
+        const result = await this.checkForChanges();
+
+        if (result === 0) {
+          await this.$store.dispatch('SAVE_PROFILE');
+        }
+
+        if (result === 2) return;
+
         this.showProfileModal = false;
+
+        try {
+          await this.$store.dispatch('CREATE_PROFILE', this.newProfile);
+          this.$toasted.success('Profile Created Successfully');
+        } catch (e) {
+          this.$toasted.error(e);
+        }
       },
-      async close() {
+      async checkForChanges() {
         const changesDetected = await this.$store.dispatch('CHECK_FOR_CHANGES');
 
         if (changesDetected) {
@@ -226,12 +253,20 @@
               message: `Changes were made to the profile '${this.active}'. Save changes?`
             }
           );
-
-          if (answer === 0) {
-            await this.$store.dispatch('SAVE_PROFILE');
-          }
-          if (answer === 2) return;
+          return answer;
         }
+
+        return null;
+      },
+      async close() {
+        const result = await this.checkForChanges();
+
+        if (result === 0) {
+          await this.$store.dispatch('SAVE_PROFILE');
+        }
+
+        if (result === 2) return;
+
         remote.BrowserWindow.getFocusedWindow().close();
       },
       async save() {
