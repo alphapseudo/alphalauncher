@@ -33,7 +33,7 @@ export default new Vuex.Store({
     MERGE_STATE(current, incoming) {
       current = _.merge(current, incoming);
     },
-    SET_ACTIVE(state, profile) {
+    SET_ACTIVE_PROFILE(state, profile) {
       state.user.active = profile;
     },
     CACHE_CONFIG(state, config) {
@@ -67,15 +67,22 @@ export default new Vuex.Store({
     async CREATE_PROFILE({ getters: { snapshot }, ...context }, profile) {
       await Profile.saveProfile(profile, snapshot);
       await context.dispatch('REFRESH_PROFILES');
-      context.commit('SET_ACTIVE', profile);
+      context.commit('SET_ACTIVE_PROFILE', profile);
       context.commit('CACHE_CONFIG', snapshot);
     },
     async LOAD_PROFILE(context, name) {
       const store = await Profile.getProfile(name);
       context.commit('MERGE_STATE', store);
-      await context.commit('SET_ACTIVE', name);
+
+      await context.commit('SET_ACTIVE_PROFILE', name);
+
+      if (Profile.getActiveProfile() !== name) {
+        Profile.setActiveProfile(name);
+      }
+
       await context.dispatch('REFRESH_MISSIONS');
       await context.dispatch('REFRESH_MODS');
+
       context.commit('CACHE_CONFIG', context.getters.snapshot);
     },
     async SAVE_PROFILE({ getters: { snapshot }, ...context }) {

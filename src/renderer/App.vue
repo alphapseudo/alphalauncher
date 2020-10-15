@@ -208,7 +208,7 @@
         if (result === 2) return;
 
         await this.$store.dispatch('LOAD_PROFILE', profile);
-        this.$toasted.success('Successfully Changed Profile');
+        this.$toasted.success(`Profile Changed to '${profile}'`);
       },
       openProfileModal() {
         this.showProfileModal = true;

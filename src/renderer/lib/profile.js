@@ -14,12 +14,16 @@ const DEFAULT_PROFILES = {
 let profiles = {};
 
 class Profile {
-  static async getActiveProfile() {
+  static async loadProfiles() {
+    profiles = await Storage.getAsync('profiles') || DEFAULT_PROFILES;
+  }
+
+  static getActiveProfile() {
     const { active } = profiles;
     return active;
   }
 
-  static async getAvailableProfiles() {
+  static getAvailableProfiles() {
     const { storage: available } = profiles;
     return Object.keys(available).sort();
   }
@@ -42,15 +46,21 @@ class Profile {
     return state;
   }
 
-  static async loadProfiles() {
-    profiles = await Storage.getAsync('profiles') || DEFAULT_PROFILES;
+  static async setActiveProfile(name) {
+    profiles.active = name;
+    await this.persist();
+    return true;
   }
 
   static async saveProfile(name, state) {
     profiles.storage[name] = state;
     profiles.active = name;
-    await Storage.setAsync('profiles', profiles);
+    await this.persist();
     return true;
+  }
+
+  static async persist() {
+    await Storage.setAsync('profiles', profiles);
   }
 
   static formatParams(params) {
