@@ -25,3 +25,6 @@ npm test
 npm run lint
 
 ```
+
+## Author
+[Andrew Fake](https://github.com/alphapseudo)
