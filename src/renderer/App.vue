@@ -125,11 +125,13 @@
                   @click="changeProfile(name)"
                 )
                   | {{ name }}
+                  span.icon(v-if="name !== 'Default'" @click="deleteProfile($event, name)")
+                    i.fa.fa-trash
               hr.dropdown-divider
               a.dropdown-item(@click="openProfileModal")
                 span.icon
                   i.fa.fa-user-plus
-                |  Create New Profile
+                | Create New Profile
       p.control
         a.button.is-transparent(@click="minimize" title="Minimize")
           span.icon
@@ -210,6 +212,30 @@
 
         await this.$store.dispatch('LOAD_PROFILE', profile);
         this.$toasted.success(`Profile Changed to '${profile}'`);
+      },
+      async deleteProfile(event, profile) {
+        event.stopPropagation();
+
+        const answer = remote.dialog.showMessageBox(
+          remote.getCurrentWindow(), {
+            type: 'question',
+            buttons: ['Yes', 'No'],
+            title: 'AlphaLauncher',
+            message: `Are you sure you want to delete '${profile}'?`,
+            detail: 'This profile cannot be restored once deleted'
+          }
+        );
+
+        if (answer === 0) {
+          try {
+            await this.$store.dispatch('DELETE_PROFILE', profile);
+            this.$toasted.success('Profile Deleted Successfully');
+          } catch (e) {
+            this.$toasted.error(e);
+          }
+        }
+
+        this.isChangingProfiles = false;
       },
       openProfileModal() {
         this.showProfileModal = true;
@@ -301,7 +327,7 @@
           remote.getCurrentWindow(), {
             type: 'question',
             buttons: ['Yes', 'No'],
-            title: 'Confirm',
+            title: 'AlphaLauncher',
             message: 'Are you sure you want to reset to defaults?'
           }
         );
@@ -593,6 +619,10 @@
     }
 
     .dropdown-item {
+      display: flex;
+      flex: 1 0 auto;
+      justify-content: space-between;
+      padding-right: 1rem;
       &.is-active {
         background-color: #ed3f46;
       }
@@ -604,6 +634,12 @@
     .dropdown-selection {
       overflow: auto;
       max-height: 200px;
+      .icon {
+        color: $grey-light;
+        &:hover {
+          color: $white;
+        }
+      }
     }
 
     .dropdown-content {
