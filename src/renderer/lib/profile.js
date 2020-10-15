@@ -6,11 +6,27 @@ import System from './system';
 
 promisifyAll(Storage);
 
+const DEFAULT_PROFILES = {
+  active: 'Default',
+  storage: { Default: {} }
+};
+
+let profiles = {};
+
 class Profile {
-  static async getActiveProfile() {
-    const store = await Storage.getAsync('app');
-    const active = store.active || 'Default';
+  static async loadProfiles() {
+    const loaded = await Storage.getAsync('profiles');
+    profiles = _.merge(DEFAULT_PROFILES, loaded);
+  }
+
+  static getActiveProfile() {
+    const { active } = profiles;
     return active;
+  }
+
+  static getAvailableProfiles() {
+    const { storage: available } = profiles;
+    return Object.keys(available).sort();
   }
 
   static async getProfilePath(base, profile) {
@@ -19,21 +35,33 @@ class Profile {
     return path;
   }
 
-  static async loadProfile(name = 'Default') {
-    const store = await Storage.getAsync(`profile_${name}`);
-    let appPath = _.get(store, 'app.appLocation', null);
+  static async getProfile(name = 'Default') {
+    const state = _.get(profiles, `storage.${name}`, {});
+    let appPath = _.get(state, 'app.appLocation', null);
 
     if (!appPath) {
       appPath = await System.getSteamAppPath();
-      _.set(store, 'app.appLocation', appPath);
+      _.set(state, 'app.appLocation', appPath);
     }
 
-    return store;
+    return state;
   }
 
-  static async saveProfileStore(name, store) {
-    await Storage.setAsync(`profile_${name}`, store);
+  static async setActiveProfile(name) {
+    profiles.active = name;
+    await this.persist();
     return true;
+  }
+
+  static async saveProfile(name, state) {
+    profiles.storage[name] = state;
+    profiles.active = name;
+    await this.persist();
+    return true;
+  }
+
+  static async persist() {
+    await Storage.setAsync('profiles', profiles);
   }
 
   static formatParams(params) {

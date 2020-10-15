@@ -1,5 +1,27 @@
 <template lang="pug">
-  section.section#app
+  section.section#app(@click="blur")
+    .modal(:class="{'is-active': showProfileModal}")
+      .modal-background(@click="closeProfileModal")
+      .modal-card
+        header.modal-card-head
+          p.modal-card-title Enter Profile Name
+          button.delete(@click="closeProfileModal" aria-label='close')
+        section.modal-card-body
+            .field
+              input.input.is-small(
+                ref="profileInput" 
+                type="text" 
+                maxlength="255" 
+                placeholder="Profile Name (e.g. Primary)" 
+                v-model.lazy="inputProfile" 
+                :class="{'is-danger': isDuplicateProfile}"
+                @keyup.enter="createNewProfile"
+              )
+              p.help.is-danger(v-if="isDuplicateProfile")
+                | Profile already exists - please choose another name
+        footer.modal-card-foot
+          button.button.is-success(@click="createNewProfile") Create
+          button.button.is-light(@click="closeProfileModal") Cancel
     transition(name="fade" mode="out-in" appear)
       template(v-if="!isLoading")
         .columns.is-mobile
@@ -80,16 +102,40 @@
       )
     .fixed-controls.field.has-addons
       p.control(v-if="!isLoading")
-        a.button.is-transparent
-          span.icon
-            i.fa.fa-user
-          span {{ profile }}
+        a.dropdown.is-right(ref="profiles" :class="{'is-active': isChangingProfiles}")
+          .dropdown-trigger
+            button.button.is-transparent(
+              @click="manageProfiles" 
+              aria-haspopup='true'
+              aria-controls='dropdown-menu'
+              title="Profile Management"
+            )
+              span.icon
+                i.fa.fa-user
+              span {{ active }}
+              span.icon.is-small
+                i.fa.fa-angle-down(aria-hidden='true')
+          #dropdown-menu.dropdown-menu(role='menu')
+            .dropdown-content
+              .dropdown-selection
+                a.dropdown-item(
+                  v-for="name in profiles"
+                  :class="{'is-active': active === name}"
+                  :key="name"
+                  @click="changeProfile(name)"
+                )
+                  | {{ name }}
+              hr.dropdown-divider
+              a.dropdown-item(@click="openProfileModal")
+                span.icon
+                  i.fa.fa-user-plus
+                |  Create New Profile
       p.control
-        a.button.is-transparent(@click="minimize")
+        a.button.is-transparent(@click="minimize" title="Minimize")
           span.icon
             i.fa.fa-minus
       p.control
-        a.button.is-transparent.is-danger(@click="close")
+        a.button.is-transparent.is-danger(@click="close" title="Close")
           span.icon
             i.fa.fa-close
 </template>
@@ -104,13 +150,20 @@
       return {
         isLoading: true,
         isRunning: false,
+        isChangingProfiles: false,
+        showProfileModal: false,
+        inputProfile: '',
         logo: 'static/images/alpha.png'
       };
     },
     computed: {
       appPath() { return this.$store.state.app.appLocation; },
       version() { return remote.app.getVersion(); },
-      profile() { return this.$store.state.profile; }
+      active() { return this.$store.state.user.active; },
+      profiles() { return this.$store.state.user.profiles; },
+      isDuplicateProfile() {
+        return this.$store.state.user.profiles.some(p => p.toLowerCase() === this.inputProfile.toLowerCase());
+      }
     },
     async mounted() {
       await this.$store.dispatch('INITIALIZE_LAUNCHER');
@@ -131,7 +184,65 @@
       minimize() {
         remote.BrowserWindow.getFocusedWindow().minimize();
       },
-      async close() {
+      blur(event) {
+        const dropdown = this.$refs.profiles;
+        if (!dropdown.contains(event.target)) {
+          this.isChangingProfiles = false;
+        }
+      },
+      manageProfiles() {
+        this.isChangingProfiles = !this.isChangingProfiles;
+      },
+      async changeProfile(profile) {
+        if (profile === this.active) {
+          return;
+        }
+
+        this.isChangingProfiles = false;
+
+        const result = await this.checkForChanges();
+
+        if (result === 0) {
+          await this.$store.dispatch('SAVE_PROFILE');
+        }
+
+        if (result === 2) return;
+
+        await this.$store.dispatch('LOAD_PROFILE', profile);
+        this.$toasted.success(`Profile Changed to '${profile}'`);
+      },
+      openProfileModal() {
+        this.showProfileModal = true;
+        this.isChangingProfiles = false;
+        this.$nextTick(() => {
+          this.$refs.profileInput.focus();
+        });
+      },
+      closeProfileModal() {
+        this.showProfileModal = false;
+        this.inputProfile = '';
+      },
+      async createNewProfile() {
+        if (this.isDuplicateProfile) return;
+
+        const result = await this.checkForChanges();
+
+        if (result === 0) {
+          await this.$store.dispatch('SAVE_PROFILE');
+        }
+
+        if (result === 2) return;
+
+        try {
+          await this.$store.dispatch('CREATE_PROFILE', this.inputProfile);
+          this.$toasted.success('Profile Created Successfully');
+        } catch (e) {
+          this.$toasted.error(e);
+        }
+
+        this.closeProfileModal();
+      },
+      async checkForChanges() {
         const changesDetected = await this.$store.dispatch('CHECK_FOR_CHANGES');
 
         if (changesDetected) {
@@ -140,15 +251,23 @@
               type: 'warning',
               buttons: ['Save', 'Don\'t Save', 'Cancel'],
               title: 'AlphaLauncher',
-              message: `Changes were made to the profile '${this.profile}'. Save changes?`
+              message: `Changes were made to the profile '${this.active}'. Save changes?`
             }
           );
-
-          if (answer === 0) {
-            await this.$store.dispatch('SAVE_PROFILE');
-          }
-          if (answer === 2) return;
+          return answer;
         }
+
+        return null;
+      },
+      async close() {
+        const result = await this.checkForChanges();
+
+        if (result === 0) {
+          await this.$store.dispatch('SAVE_PROFILE');
+        }
+
+        if (result === 2) return;
+
         remote.BrowserWindow.getFocusedWindow().close();
       },
       async save() {
@@ -219,11 +338,20 @@
   $menu-item-active-color: $black;
   $menu-item-active-background-color: $white-bis;
 
+  $modal-card-head-padding: 12px;
+  $modal-card-title-size: 1.4rem;
+  $modal-card-head-background-color: #3a4652;
+  $modal-card-body-background-color: #3a4652;
+  $modal-card-foot-border-top: 0;
+  $modal-card-head-border-bottom: 0;
+
   $table-color: $white;
   $table-background-color: $black-ter;
   $table-striped-row-even-background-color: $grey-dark;
 
   $label-color: $white-ter;
+
+  $scheme-main: $black-ter;
 
   $check-green: #2fff78;
 
@@ -236,7 +364,7 @@
   body {
     -webkit-app-region: drag;
     -webkit-user-select: none;
-    a, .configuration { -webkit-app-region: no-drag }
+    a, .modal, .navigation, .configuration { -webkit-app-region: no-drag }
   }
 
   // Brand
@@ -458,6 +586,31 @@
     &.is-active { color: $yellow }
   }
 
+  // Dropdown
+  .dropdown {
+    button:focus {
+      color: $white;
+    }
+
+    .dropdown-item {
+      &.is-active {
+        background-color: #ed3f46;
+      }
+      &:hover {
+        color: #fafafa;
+      }
+    }
+
+    .dropdown-selection {
+      overflow: auto;
+      max-height: 200px;
+    }
+
+    .dropdown-content {
+      border: 1px solid $grey-light;
+    }
+  }
+
   .sub-controls {
     margin-bottom: -1.4em;
     a { padding: 0.75em 0.5em }
@@ -467,6 +620,7 @@
     position: fixed;
     top: 0;
     right: 0.1em;
+    z-index: 10;
   }
 
   @import "~bulma";
