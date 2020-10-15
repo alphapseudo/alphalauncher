@@ -593,6 +593,9 @@
     }
 
     .dropdown-item {
+      &.is-active {
+        background-color: #ed3f46;
+      }
       &:hover {
         color: #fafafa;
       }
