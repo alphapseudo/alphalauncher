@@ -232,14 +232,14 @@
 
         if (result === 2) return;
 
-        this.showProfileModal = false;
-
         try {
           await this.$store.dispatch('CREATE_PROFILE', this.newProfile);
           this.$toasted.success('Profile Created Successfully');
         } catch (e) {
           this.$toasted.error(e);
         }
+
+        this.closeProfileModal();
       },
       async checkForChanges() {
         const changesDetected = await this.$store.dispatch('CHECK_FOR_CHANGES');
