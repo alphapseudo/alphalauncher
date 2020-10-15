@@ -117,13 +117,14 @@
                 i.fa.fa-angle-down(aria-hidden='true')
           #dropdown-menu.dropdown-menu(role='menu')
             .dropdown-content
-              a.dropdown-item(
-                v-for="name in profiles"
-                :class="{'is-active': active === name}"
-                :key="name"
-                @click="changeProfile(name)"
-              )
-                | {{ name }}
+              .dropdown-selection
+                a.dropdown-item(
+                  v-for="name in profiles"
+                  :class="{'is-active': active === name}"
+                  :key="name"
+                  @click="changeProfile(name)"
+                )
+                  | {{ name }}
               hr.dropdown-divider
               a.dropdown-item(@click="openProfileModal")
                 span.icon
@@ -595,6 +596,11 @@
       &:hover {
         color: #fafafa;
       }
+    }
+
+    .dropdown-selection {
+      overflow: auto;
+      max-height: 200px;
     }
 
     .dropdown-content {
