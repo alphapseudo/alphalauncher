@@ -1,41 +1,27 @@
 {
   "name": "alphalauncher",
   "version": "2.0.0",
-  "private": false,
+  "private": true,
   "description": "A simple but powerful Arma III dedicated server tool",
   "author": "Andrew Fake <afake518@gmail.com>",
+  "license": "GPL-3.0",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint",
-    "electron:build": "vue-cli-service electron:build",
-    "electron:serve": "vue-cli-service electron:serve",
-    "postinstall": "electron-builder install-app-deps",
-    "postuninstall": "electron-builder install-app-deps"
+    "lint": "vue-cli-service lint"
   },
-  "main": "background.js",
   "dependencies": {
     "core-js": "^3.6.5",
-    "vue": "^3.0.0",
-    "vue-router": "^4.0.0-0",
-    "vue-simple-spinner": "^1.2.10",
-    "vuex": "^4.0.0-0"
+    "vue": "^2.6.11"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",
     "@vue/cli-plugin-eslint": "~4.5.0",
-    "@vue/cli-plugin-router": "~4.5.0",
-    "@vue/cli-plugin-vuex": "~4.5.0",
     "@vue/cli-service": "~4.5.0",
-    "@vue/compiler-sfc": "^3.0.0",
     "babel-eslint": "^10.1.0",
-    "electron": "^13.0.0",
-    "electron-devtools-installer": "^3.1.0",
     "eslint": "^6.7.2",
-    "eslint-plugin-vue": "^7.0.0",
-    "node-sass": "^6.0.1",
-    "sass-loader": "^12.3.0",
-    "vue-cli-plugin-electron-builder": "~2.1.1"
+    "eslint-plugin-vue": "^6.2.2",
+    "vue-template-compiler": "^2.6.11"
   },
   "eslintConfig": {
     "root": true,
@@ -43,7 +29,7 @@
       "node": true
     },
     "extends": [
-      "plugin:vue/vue3-essential",
+      "plugin:vue/essential",
       "eslint:recommended"
     ],
     "parserOptions": {
@@ -55,6 +41,5 @@
     "> 1%",
     "last 2 versions",
     "not dead"
-  ],
-  "license": "GPL-3.0"
+  ]
 }
