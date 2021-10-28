@@ -120,13 +120,13 @@
       .column
         .field.is-horizontal
           .field-label.is-small
-            label.label Detected&nbsp;Mines
+            label.label Detect&nbsp;Mines
           .field-body
             .field
               .control
                 .select.is-small
                   select(v-model="mines" :disabled="!isActive('custom')")
-                    option(:value=0) Hide
+                    option(:value=0) Hidden
                     option(:value=1) Limited Distance
                     option(:value=2) Show
         .field.is-horizontal
