@@ -85,41 +85,44 @@
       }
     },
     methods: {
-      pickConsole() {
-        remote.dialog.showSaveDialog({
+      async pickConsole() {
+        const result = await remote.dialog.showSaveDialog({
           defaultPath: 'server.log',
           filters: [
             { name: 'Log file (*.log)', extensions: ['log'] }
           ]
-        }, (path) => {
-          this.$store.commit('UPDATE_CONFIG', ['logfile', path]);
         });
+
+        const { filePath: path } = result;
+        this.$store.commit('UPDATE_CONFIG', ['logfile', path]);
       },
       clearConsole() {
         this.$store.commit('UPDATE_CONFIG', ['logfile', null]);
       },
-      pickRanking() {
-        remote.dialog.showSaveDialog({
+      async pickRanking() {
+        const result = await remote.dialog.showSaveDialog({
           defaultPath: 'ranking.log',
           filters: [
             { name: 'Log file (*.log)', extensions: ['log'] }
           ]
-        }, (path) => {
-          this.$store.commit('UPDATE_PARAMS', ['ranking', path]);
         });
+
+        const { filePath: path } = result;
+        this.$store.commit('UPDATE_PARAMS', ['ranking', path]);
       },
       clearRanking() {
         this.$store.commit('UPDATE_PARAMS', ['ranking', null]);
       },
-      pickPID() {
-        remote.dialog.showSaveDialog({
+      async pickPID() {
+        const result = await remote.dialog.showSaveDialog({
           defaultPath: 'pid.log',
           filters: [
             { name: 'Log file (*.log)', extensions: ['log'] }
           ]
-        }, (path) => {
-          this.$store.commit('UPDATE_PARAMS', ['pid', path]);
         });
+
+        const { filePath: path } = result;
+        this.$store.commit('UPDATE_PARAMS', ['pid', path]);
       },
       clearPID() {
         this.$store.commit('UPDATE_PARAMS', ['pid', null]);

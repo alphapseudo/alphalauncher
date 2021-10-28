@@ -215,7 +215,7 @@
       async deleteProfile(event, profile) {
         event.stopPropagation();
 
-        const answer = remote.dialog.showMessageBox(
+        const { response: answer } = await remote.dialog.showMessageBox(
           remote.getCurrentWindow(), {
             type: 'question',
             buttons: ['Yes', 'No'],
@@ -271,7 +271,7 @@
         const changesDetected = await this.$store.dispatch('CHECK_FOR_CHANGES');
 
         if (changesDetected) {
-          const answer = remote.dialog.showMessageBox(
+          const { response: answer } = await remote.dialog.showMessageBox(
             remote.getCurrentWindow(), {
               type: 'warning',
               buttons: ['Save', 'Don\'t Save', 'Cancel'],
@@ -320,9 +320,9 @@
           this.isRunning = false;
         }
       },
-      reset() {
+      async reset() {
         if (!this.appPath) return;
-        const answer = remote.dialog.showMessageBox(
+        const { response: answer } = await remote.dialog.showMessageBox(
           remote.getCurrentWindow(), {
             type: 'question',
             buttons: ['Yes', 'No'],
