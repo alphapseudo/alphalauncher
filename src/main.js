@@ -1,5 +1,5 @@
 import Vue from 'vue'
-// import Toasted from 'vue-toasted';
+import Toasted from 'vue-toasted';
 import VueTippy, { TippyComponent } from "vue-tippy";
 import App from './App.vue'
 import router from './router'
@@ -17,10 +17,10 @@ Vue.use(VueTippy, {
 
 Vue.component("tippy", TippyComponent);
 
-// Vue.use(Toasted, {
-//   position: 'bottom-right',
-//   duration: 4000
-// });
+Vue.use(Toasted, {
+  position: 'bottom-right',
+  duration: 4000
+});
 
 Vue.config.productionTip = false
 
