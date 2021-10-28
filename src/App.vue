@@ -28,7 +28,7 @@
             .column.is-one-third.navigation
               h3.title.brand
                 span
-                  img(:src="logo")
+                  img(src="../static/images/alpha.png")
                 | AlphaLauncher
               p.subtitle.version v{{ version }}
               aside.menu
@@ -154,8 +154,7 @@
         isRunning: false,
         isChangingProfiles: false,
         showProfileModal: false,
-        inputProfile: '',
-        logo: 'static/images/alpha.png'
+        inputProfile: ''
       };
     },
     computed: {
