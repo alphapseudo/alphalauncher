@@ -1,27 +1,62 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
+
+import General from '@/components/General';
+import Difficulty from '@/components/Difficulty';
+import Missions from '@/components/Missions';
+import Mods from '@/components/Mods';
+import Logging from '@/components/Logging';
+import Scripting from '@/components/Scripting';
+import Settings from '@/components/Settings';
 
 Vue.use(VueRouter)
 
 const routes = [
   {
     path: '/',
-    name: 'Home',
-    component: Home
+    redirect: '/general'
   },
   {
-    path: '/about',
-    name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
+    path: '/general',
+    component: General,
+  },
+  {
+    path: '/difficulty',
+    component: Difficulty,
+  },
+  {
+    path: '/missions',
+    component: Missions,
+  },
+  {
+    path: '/mods',
+    component: Mods
+  },
+  {
+    path: '/logging',
+    component: Logging
+  },
+  {
+    path: '/scripting',
+    component: Scripting
+  },
+  {
+    path: '/settings',
+    component: Settings
   }
 ]
 
 const router = new VueRouter({
-  routes
+  routes,
+  linkActiveClass: 'is-active',
+  scrollBehavior() {
+    const configuration = document.getElementsByClassName('configuration')[0];
+    if (configuration) {
+      setTimeout(() => {
+        configuration.scrollTop = 0;
+      }, 200);
+    }
+  }
 })
 
 export default router
