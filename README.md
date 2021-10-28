@@ -13,6 +13,9 @@ yarn install
 
 # Run Development Electron Server
 yarn electron:serve
+
+# Build Distributables
+yarn electron:build
 ```
 
 ## Author
