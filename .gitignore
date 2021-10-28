@@ -12,3 +12,6 @@ thumbs.db
 .vscode
 *.cfg
 *.Arma3Profile
+
+#Electron-builder output
+/dist_electron
