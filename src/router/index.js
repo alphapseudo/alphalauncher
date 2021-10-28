@@ -1,13 +1,13 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 
-import General from '@/components/General';
-import Difficulty from '@/components/Difficulty';
-import Missions from '@/components/Missions';
-import Mods from '@/components/Mods';
-import Logging from '@/components/Logging';
-import Scripting from '@/components/Scripting';
-import Settings from '@/components/Settings';
+import General from '@/views/General';
+import Difficulty from '@/views/Difficulty';
+import Missions from '@/views/Missions';
+import Mods from '@/views/Mods';
+import Logging from '@/views/Logging';
+import Scripting from '@/views/Scripting';
+import Settings from '@/views/Settings';
 
 Vue.use(VueRouter)
 
