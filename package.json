@@ -63,7 +63,10 @@
     "parserOptions": {
       "parser": "babel-eslint"
     },
-    "rules": {}
+    "globals": {
+      "__static": true,
+      "$": true
+    }
   },
   "browserslist": [
     "> 1%",
