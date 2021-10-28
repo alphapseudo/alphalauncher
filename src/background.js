@@ -19,6 +19,7 @@ async function createWindow() {
     width: 910,
     maximizable: false,
     backgroundColor: '#29323c',
+    title: "AlphaLauncher",
     webPreferences: {
       
       // Use pluginOptions.nodeIntegration, leave this alone
