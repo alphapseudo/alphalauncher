@@ -15,6 +15,10 @@
   },
   "main": "background.js",
   "dependencies": {
+    "bulma": "^0.9.3",
+    "bulma-checkradio": "^2.1.2",
+    "bulma-slider": "^2.0.4",
+    "bulma-switch": "^2.0.0",
     "core-js": "^3.6.5",
     "vue": "^2.6.11",
     "vue-router": "^3.2.0",

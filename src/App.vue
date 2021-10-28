@@ -660,7 +660,7 @@
   }
 
   @import "~bulma";
-  @import "~bulma-switch/switch.sass";
-  @import "~bulma-slider/slider.sass";
-  @import "~bulma-checkradio/checkradio.sass";
+  @import "~bulma-switch";
+  @import "~bulma-slider";
+  @import "~bulma-checkradio";
 </style>
