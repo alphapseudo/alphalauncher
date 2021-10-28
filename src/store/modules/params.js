@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 const defaults = {
   port: 2302,
   ranking: null,

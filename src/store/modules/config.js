@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 const defaults = {
   hostname: '',
   maxPlayers: 8,

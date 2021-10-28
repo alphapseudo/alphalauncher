@@ -2,6 +2,7 @@ import Handlebars from 'handlebars';
 import * as Fs from 'fs';
 import { promisifyAll } from 'bluebird';
 import Path from 'path';
+import _ from 'lodash';
 import Profile from './profile';
 
 const fs = promisifyAll(Fs);

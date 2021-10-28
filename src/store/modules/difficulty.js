@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 const defaults = {
   current: 'recruit',
   aiPreset: 3,

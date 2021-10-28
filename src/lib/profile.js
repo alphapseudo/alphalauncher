@@ -2,6 +2,7 @@ import { mkdirp } from 'mkdirp';
 import Storage from 'electron-json-storage';
 import Path from 'path';
 import { promisifyAll } from 'bluebird';
+import _ from 'lodash';
 import System from './system';
 
 promisifyAll(Storage);

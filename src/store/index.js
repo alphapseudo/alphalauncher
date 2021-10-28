@@ -3,6 +3,7 @@ import Vuex from 'vuex';
 import Storage from 'electron-json-storage';
 import Crypto from 'crypto';
 import { promisifyAll } from 'bluebird';
+import _ from 'lodash';
 
 import Template from '../lib/template';
 import Application from '../lib/application';
