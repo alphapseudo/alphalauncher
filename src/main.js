@@ -1,6 +1,6 @@
 import Vue from 'vue'
-// import Tippy from 'v-tippy';
 // import Toasted from 'vue-toasted';
+import VueTippy, { TippyComponent } from "vue-tippy";
 import App from './App.vue'
 import router from './router'
 import store from './store'
@@ -8,12 +8,14 @@ import $ from "jquery";
 
 window.$ = $;
 
-// TODO Re-enabled these plugins
-// Vue.use(Tippy, {
-//   size: 'small',
-//   distance: 5,
-//   animation: 'perspective'
-// });
+Vue.use(VueTippy, {
+  directive: "tippy",
+  size: 'small',
+  distance: 5,
+  animation: 'perspective'
+});
+
+Vue.component("tippy", TippyComponent);
 
 // Vue.use(Toasted, {
 //   position: 'bottom-right',

@@ -345,7 +345,6 @@
 <style lang="scss">
   @import "~bulma/sass/utilities/initial-variables";
   @import "~font-awesome/css/font-awesome.min.css";
-  // @import "~v-tippy/dist/tippy.css";
 
   $text: $white;
   $text-light: $grey-lighter;
