@@ -40,11 +40,23 @@
         .field
           .control
             label.label.is-small Server Password
-            input.input.is-small(type="password" placeholder="Client connection password" v-model.lazy="sPass")
+            .field.has-addons
+              .control.is-expanded
+                input.input.is-small(:type="showServer ? 'text' : 'password'" placeholder="Client connection password" v-model.lazy="sPass")
+              .control
+                a.button.is-small.is-info(@click="toggleServerPassword" v-tippy :title="`${showServer ? 'Hide' : 'Reveal'} Password`")
+                  span.icon.is-small
+                    i.fa(:class="showServer ? 'fa-eye-slash' : 'fa-eye'")
         .field
           .control
             label.label.is-small Admin Password
-            input.input.is-small(type="password" placeholder="Server admin password" v-model.lazy="aPass")
+            .field.has-addons
+              .control.is-expanded
+                input.input.is-small(:type="showAdmin ? 'text' : 'password'" placeholder="Server admin password" v-model.lazy="aPass")
+              .control
+                a.button.is-small.is-info(@click="toggleAdminPassword" v-tippy :title="`${showAdmin ? 'Hide' : 'Reveal'} Password`")
+                  span.icon.is-small
+                    i.fa(:class="showAdmin ? 'fa-eye-slash' : 'fa-eye'")
     .field.is-horizontal
       .field-body
         .field
@@ -196,6 +208,20 @@
 <script>
   export default {
     name: 'general',
+    data() {
+      return {
+        showServer: false,
+        showAdmin: false
+      };
+    },
+    methods: {
+      toggleServerPassword() {
+        this.showServer = !this.showServer;
+      },
+      toggleAdminPassword() {
+        this.showAdmin = !this.showAdmin;
+      }
+    },
     computed: {
       hostname: {
         get() { return this.$store.state.config.hostname; },
