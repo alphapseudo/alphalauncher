@@ -9,10 +9,14 @@
   #logging
     p.title.is-5 Scripting
     p.subtitle.is-6 Apply server-side scripting
+    label.label.is-small Server Command Password
     .field.has-addons
       .control
-        label.label.is-small Server Command Password
-        input.input.is-small(type="password" maxlength="255" placeholder="Password" v-model.lazy="commandPass")
+        input.input.is-small(:type="showScript ? 'text' : 'password'" maxlength="255" placeholder="Password" v-model.lazy="commandPass")
+      .control
+        a.button.is-small.is-info(@click="toggleScriptPassword" v-tippy :title="`${showScript ? 'Hide' : 'Reveal'} Password`")
+          span.icon.is-small
+            i.fa(:class="showScript ? 'fa-eye-slash' : 'fa-eye'")
     hr
     .columns
       .column
@@ -51,6 +55,16 @@
 <script>
   export default {
     name: 'logging',
+    data() {
+      return {
+        showScript: false
+      };
+    },
+    methods: {
+      toggleScriptPassword() {
+        this.showScript = !this.showScript;
+      }
+    },
     computed: {
       commandPass: {
         get() { return this.$store.state.config.serverCommandPassword; },
