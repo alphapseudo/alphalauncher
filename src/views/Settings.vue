@@ -42,23 +42,28 @@
       appPath() { return this.$store.state.app.appLocation; }
     },
     methods: {
-      pickAppLocation() {
-        remote.dialog.showOpenDialog({
+      async pickAppLocation() {
+        const response = await remote.dialog.showOpenDialog({
           title: 'Select Application Directory',
           buttonLabel: 'Choose',
           properties: [
             'openDirectory'
           ]
-        }, async (response) => {
-          if (!response) return;
-          const [path = null] = response;
-          const result = await this.$store.dispatch('UPDATE_APP_DIRECTORY', path);
-          if (result) {
-            this.$toasted.success('Application Path Valid');
-          } else {
-            this.$toasted.error('Server executable not found, please check permissions and path');
-          }
         });
+
+        if (!response) return;
+
+        const { filePaths: [path = null] } = response;
+
+        if (path == null) return;
+
+        const result = await this.$store.dispatch('UPDATE_APP_DIRECTORY', path);
+
+        if (result) {
+          this.$toasted.success('Application Path Valid');
+        } else {
+          this.$toasted.error('Server executable not found, please check permissions and path');
+        }
       }
     }
   };
