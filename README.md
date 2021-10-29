@@ -1,5 +1,7 @@
 ![](static/images/logo.png?raw)
 
+[![Build/Release](https://github.com/alphapseudo/alphalauncher/actions/workflows/build.yml/badge.svg)](https://github.com/alphapseudo/alphalauncher/actions/workflows/build.yml)
+
 > A simple but powerful Arma III dedicated server tool.
 
 ![](static/images/launcher.png?raw)
