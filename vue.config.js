@@ -5,7 +5,7 @@ module.exports = {
         productName: "Alpha Launcher",
         appId: "com.github.alphapseudo.alphalauncher",
         linux: {
-          target: "tar.gz"
+          target: ["deb", "tar.gz"]
         }
       },
       nodeIntegration: true
