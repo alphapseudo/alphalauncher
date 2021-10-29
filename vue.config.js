@@ -10,6 +10,9 @@ module.exports = {
         mac: {
           target: "dmg"
         },
+        dmg: {
+          writeUpdateInfo: false
+        },
         win: {
           target:"portable"
         }
