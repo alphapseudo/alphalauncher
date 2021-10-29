@@ -6,6 +6,12 @@ module.exports = {
         appId: "com.github.alphapseudo.alphalauncher",
         linux: {
           target: ["deb", "tar.gz"]
+        },
+        mac: {
+          target: "dmg"
+        },
+        win: {
+          target:"portable"
         }
       },
       nodeIntegration: true
