@@ -103,6 +103,44 @@
             color: #666;
             font-size: 0.9rem;
         }
+
+        .features {
+            margin: 1rem 0 4rem 0;
+            padding: 0 1rem;
+        }
+
+        .features h2 {
+            margin-bottom: 2rem;
+            color: #2c3e50;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .feature-item {
+            padding: 1.5rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            transition: transform 0.2s;
+        }
+
+        .feature-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-item h3 {
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+
+        .feature-item p {
+            color: #666;
+        }
     </style>
 </head>
 <body>
@@ -117,6 +155,23 @@
 
         <main>
             <img src="static/images/launcher.png" alt="AlphaLauncher Interface" class="app-image">
+
+            <div class="features">
+                <div class="feature-grid">
+                    <div class="feature-item">
+                        <h3>Complete Configuration</h3>
+                        <p>All server settings in one place - no config files to edit manually</p>
+                    </div>
+                    <div class="feature-item">
+                        <h3>Multiple Profiles</h3>
+                        <p>Switch between different server configurations with ease</p>
+                    </div>
+                    <div class="feature-item">
+                        <h3>Steam Workshop Support</h3>
+                        <p>Browse and load workshop mods directly in the launcher</p>
+                    </div>
+                </div>
+            </div>
             
             <div class="buttons">
                 <a href="https://github.com/alphapseudo/alphalauncher/releases/latest" class="button primary-button">
@@ -129,10 +184,7 @@
                     View on GitHub
                 </a>
             </div>
-
-            <div class="features">
-                <!-- Add features section if needed -->
-            </div>
+            
         </main>
 
         <footer class="footer">
