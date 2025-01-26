@@ -1,4 +1,5 @@
-![](static/images/logo.png?raw)
+![AlphaLauncher](static/images/logo-dark-mode.png#gh-dark-mode-only)
+![AlphaLauncher](static/images/logo.png#gh-light-mode-only)
 
 [![Build/Release](https://github.com/alphapseudo/alphalauncher/actions/workflows/build.yml/badge.svg)](https://github.com/alphapseudo/alphalauncher/actions/workflows/build.yml)
 
