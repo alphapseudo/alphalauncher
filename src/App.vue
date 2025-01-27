@@ -187,7 +187,7 @@
       },
       blur(event) {
         const dropdown = this.$refs.profiles;
-        if (!dropdown.contains(event.target)) {
+        if (dropdown && !dropdown.contains(event.target)) {
           this.isChangingProfiles = false;
         }
       },
