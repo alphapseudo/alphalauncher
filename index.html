@@ -284,6 +284,14 @@
         .container {
             box-shadow: none;
         }
+
+        .version-text {
+            display: inline;
+            font-size: 0.8em;
+            opacity: 0.8;
+            font-weight: normal;
+            margin-left: 4px;
+        }
     </style>
 </head>
 <body>
@@ -347,7 +355,7 @@
             
             <div class="buttons">
                 <a href="https://github.com/alphapseudo/alphalauncher/releases/latest" class="button primary-button">
-                    Download Latest Release
+                    Download Latest Version<span id="version-number" class="version-text"></span>
                 </a>
                 <a href="https://github.com/alphapseudo/alphalauncher" class="button secondary-button">
                     <svg height="20" width="20" style="margin-right: 8px; fill: currentColor;" viewBox="0 0 16 16">
@@ -406,6 +414,17 @@
 
         // Start carousel when the page loads
         window.addEventListener('load', autoplayCarousel);
+
+        // Fetch latest release version from GitHub API
+        fetch('https://api.github.com/repos/alphapseudo/alphalauncher/releases/latest')
+            .then(response => response.json())
+            .then(data => {
+                const versionSpan = document.getElementById('version-number');
+                versionSpan.textContent = ` (${data.tag_name})`;
+            })
+            .catch(error => {
+                console.error('Error fetching version:', error);
+            });
     </script>
 </body>
 </html> 
