@@ -377,7 +377,7 @@
             </div>
             
             <div class="buttons">
-                <a href="https://github.com/alphapseudo/alphalauncher/releases/download/v2.3.0/Alpha-Launcher-2.3.0.exe" class="button primary-button">
+                <a href="https://api.github.com/repos/alphapseudo/alphalauncher/releases/latest" class="button primary-button">
                     <svg height="16" width="16" style="margin-right: 8px; fill: currentColor;" viewBox="0 0 448 512">
                         <path d="M0 93.7l183.6-25.3v177.4H0V93.7zm0 324.6l183.6 25.3V268.4H0v149.9zm203.8 28L448 480V268.4H203.8v177.9zm0-380.6v180.1H448V32L203.8 65.7z"/>
                     </svg>
@@ -450,7 +450,8 @@
                 
                 // Update download link to latest Windows exe
                 const downloadButton = document.querySelector('.primary-button');
-                const windowsAsset = data.assets.find(asset => asset.name.endsWith('.exe'));
+                const extensions = ['.exe', '.zip'];
+                const windowsAsset = data.assets.find(asset => extensions.some(ext => asset.name.endsWith(ext)));
                 if (windowsAsset) {
                     downloadButton.href = windowsAsset.browser_download_url;
                 }
